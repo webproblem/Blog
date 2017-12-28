@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style media="screen">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .demo {
+                height: 300px;
+                width: 300px;
+                background-color: blue;
+                color: #fff;
+                margin: 10px;
+            }
+            #app2 {
+                border: 3px solid red;
+                padding: 10px;
+            }
+            #app3 {
+                overflow-x: auto;
+                border: 3px solid red;
+                padding: 10px;
+            }
+            #app3 span{
+                display: block;
+                width: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app" class="demo">app元素区域</div>
+        <script type="text/javascript">
+            var app = document.getElementById("app");
+            var appJson = {};
+            appJson.clientWidth = app.clientWidth;
+            appJson.offsetWidth = app.offsetWidth;
+            appJson.scrollWidth = app.scrollWidth;
+        </script>
+
+        <div id="app2" class="demo">app2元素区域</div>
+        <script type="text/javascript">
+            var app2 = document.getElementById("app2");
+            var appJson2 = {};
+            appJson2.clientWidth = app2.clientWidth;
+            appJson2.offsetWidth = app2.offsetWidth;
+            appJson2.scrollWidth = app2.scrollWidth;
+        </script>
+
+        <div id="app3" class="demo">
+            <span>
+                app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域app3元素区域
+            </span>
+        </div>
+        <script type="text/javascript">
+            var app3 = document.getElementById("app3");
+            var appJson3 = {};
+            appJson3.clientWidth = app3.clientWidth;
+            appJson3.offsetWidth = app3.offsetWidth;
+            appJson3.scrollWidth = app3.scrollWidth;
+        </script>
+
+        <script type="text/javascript">
+            var jsonData = {};
+            jsonData.app = appJson;
+            jsonData.app2 = appJson2;
+            jsonData.app3 = appJson3;
+            console.table(jsonData);
+        </script>
+
+    </body>
+</html>
