@@ -103,7 +103,6 @@
                 }
             }
             this.touchMove.dispatch(evt, this.element);
-            this.pinch.dispatch(evt, this.element);
         },
         end: function(evt) {
             this._cancelLongTap();
