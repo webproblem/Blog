@@ -1,4 +1,8 @@
 ;(function (window, undefined) {
+    function getLen(v) {
+        return Math.sqrt(v.x * v.x + v.y * v.y);
+    }
+
     function HandlerAdmin(el) {
         this.handlers = [];
         this.el = el;
@@ -41,7 +45,11 @@
         this.singleTap = wrapFunc(this.element, options.singleTap || temp);
         this.multipointStart = wrapFunc(this.element, options.multipointStart || temp);
         this.multipointEnd = wrapFunc(this.element, options.multipointEnd || temp);
+        this.pinch = wrapFunc(this.element, options.pinch || temp);
 
+        this.preV = { x: null, y: null };
+        this.pinchStartLen = null;
+        this.zoom = 1;
         //是否是双击操作
         this.isDoubleTap = false;
         this.tapTimeout = null;
@@ -60,6 +68,18 @@
             this.touchStart.dispatch(evt, this.element);
             this.isDoubleTap = this.delta > 0 && this.delta <= 250 ? true : false;
             this.last = this.now;
+
+            var preV = this.preV;
+            var len = evt.touches.length;
+            if(len > 1) {
+                this._cancelLongTap();
+                var v = { x: evt.touches[1].pageX - this.x1, y: evt.touches[1].pageY - this.y1 };
+                preV.x = v.x;
+                preV.y = v.y;
+                this.pinchStartLen = getLen(preV);
+                this.multipointStart.dispatch(evt, this.element);
+            }
+
             //判断操作是单击还是长按
             this._preventTap = false;
             this.longTapTimeout = setTimeout(function() {
