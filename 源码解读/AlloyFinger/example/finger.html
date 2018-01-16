@@ -139,11 +139,7 @@
           var initScale = 1;
           new mtouch(pinchBox, {
               multipointStart: function(evt) {
-                  try{
-                      initScale = pinchBox.scaleX;
-                  }catch(e) {
-                      alert(e);
-                  }
+                  initScale = pinchBox.scaleX;
               },
               pinch: function(evt) {
                   try{
