@@ -88,7 +88,22 @@
             }.bind(this), 750)
         },
         move: function(evt) {
+            var preV = this.preV,
+                len = evt.touches.length,
+                currentX = evt.touches[0].pageX,
+                currentY = evt.touches[0].pageY;
+            this.isDoubleTap = false;
+            if (len > 1) {
+                var sCurrentX = evt.touches[1].pageX,
+                    sCurrentY = evt.touches[1].pageY
+                var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
+                if (this.pinchStartLen > 0) {
+                    evt.zoom = getLen(v) / this.pinchStartLen;
+                    this.pinch.dispatch(evt, this.element);
+                }
+            }
             this.touchMove.dispatch(evt, this.element);
+            this.pinch.dispatch(evt, this.element);
         },
         end: function(evt) {
             this._cancelLongTap();
