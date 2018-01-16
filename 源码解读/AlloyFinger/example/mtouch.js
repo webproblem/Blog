@@ -108,9 +108,6 @@
                         evt.zoom = getLen(v) / this.pinchStartLen;
                         this.pinch.dispatch(evt, this.element);
                     }
-
-                    evt.angle = getRotateAngle(v, preV);
-                    this.rotate.dispatch(evt, this.element);
                 }
                 preV.x = v.x;
                 preV.y = v.y;
@@ -137,9 +134,7 @@
                 }
 
 
-                this.pressMove.dispatch(evt, this.element);
             }
-
             this.touchMove.dispatch(evt, this.element);
 
             this._cancelLongTap();
