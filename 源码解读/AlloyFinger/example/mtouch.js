@@ -100,7 +100,9 @@
                 var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
 
                 if (preV.x !== null) {
+                    alert(this.pinchStartLen);
                     if (this.pinchStartLen > 0) {
+                        alert(getLen(v));
                         evt.zoom = getLen(v) / this.pinchStartLen;
                         this.pinch.dispatch(evt, this.element);
                     }
