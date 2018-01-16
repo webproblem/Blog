@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <title>测试页面</title>
-    <script type="text/javascript" src="./mtouch.js"></script>
+    <!-- <script type="text/javascript" src="./mtouch.js"></script> -->
+    <script type="text/javascript" src="http://alloyteam.github.io/AlloyFinger/alloy_finger.js"></script>
     <script type="text/javascript" src="https://alloyteam.github.io/AlloyFinger/asset/transform.js"></script>
     <style media="screen">
         * {
@@ -137,7 +138,7 @@
           var pinchBox = document.getElementById("pinch-box");
           Transform(pinchBox);
           var initScale = 1;
-          new mtouch(pinchBox, {
+          new AlloyFinger(pinchBox, {
               multipointStart: function(evt) {
                   initScale = pinchBox.scaleX;
               },
