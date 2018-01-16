@@ -94,7 +94,9 @@
                 currentX = evt.touches[0].pageX,
                 currentY = evt.touches[0].pageY;
             this.isDoubleTap = false;
+            alert(111)
             if (len > 1) {
+                alert(222)
                 var sCurrentX = evt.touches[1].pageX,
                     sCurrentY = evt.touches[1].pageY
                 var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
