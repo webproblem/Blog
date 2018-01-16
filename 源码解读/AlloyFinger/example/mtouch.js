@@ -39,6 +39,8 @@
         this.longTap = wrapFunc(this.element, options.longTap || temp);
         this.doubleTap = wrapFunc(this.element, options.doubleTap || temp);
         this.singleTap = wrapFunc(this.element, options.singleTap || temp);
+        this.multipointStart = wrapFunc(this.element, options.multipointStart || temp);
+        this.multipointEnd = wrapFunc(this.element, options.multipointEnd || temp);
 
         //是否是双击操作
         this.isDoubleTap = false;

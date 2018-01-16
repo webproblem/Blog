@@ -3,6 +3,10 @@
  * Github: https://github.com/AlloyTeam/AlloyFinger
  */
 ; (function () {
+    //获取多指触摸操作的时候，手指触摸的位置之间的距离
+    //多指触摸操作的时候，v.x表示手指之间的水平间距，v.y表示垂直间距，利用勾股定理的原理计算出手指触点之间的直线距离
+    //详解：将v.x的水平间距和v.y的垂直间距用直线连接起来，就形成了一个直角三角形的两条垂直边，指触点之间的直线距离就代表直角三角形的斜边
+    //那么利用勾股定理就可以很容易的计算出斜边的长度，也就是手指触点之间的直线距离
     function getLen(v) {
         return Math.sqrt(v.x * v.x + v.y * v.y);
     }
@@ -86,6 +90,7 @@
         this.element.addEventListener("touchcancel", this.cancel, false);
 
         this.preV = { x: null, y: null };
+        //存储多指触摸操作时，手指触摸位置之间的距离
         this.pinchStartLen = null;
         this.zoom = 1;
         //操作是否为双击
@@ -116,7 +121,7 @@
 
         window.addEventListener('scroll', this._cancelAllHandler);
 
-        //手指每次按下触摸操作之间的时间间隔
+        //手指连续按下触摸操作之间的时间间隔
         this.delta = null;
         //手指最近一次按下触摸操作时的时间戳
         this.last = null;
@@ -133,28 +138,38 @@
         this.longTapTimeout = null;
         this.swipeTimeout = null;
         this.x1 = this.x2 = this.y1 = this.y2 = null;
+        //用于存储手指触摸操作时的水平坐标和垂直坐标
         this.preTapPosition = { x: null, y: null };
     };
 
     AlloyFinger.prototype = {
+        //手指触摸时触发的事件
         start: function (evt) {
             if (!evt.touches) return;
+            //获取手指触点触摸时的时间戳
             this.now = Date.now();
+            //获取手指触点相对于HTML文档左边沿的的X坐标
             this.x1 = evt.touches[0].pageX;
+            //获取手指触点相对于HTML文档上边沿的的Y坐标
             this.y1 = evt.touches[0].pageY;
+            //计算出手指连续按下触摸操作之间的时间间隔
             this.delta = this.now - (this.last || this.now);
             this.touchStart.dispatch(evt, this.element);
             if (this.preTapPosition.x !== null) {
+                //如果手指连续触摸操作之间的时间间隔小于250毫秒，且手指连续触摸操作之间的触点位置水平坐标小于30，垂直坐标小于30，那么就判定该操作为双击操作
                 this.isDoubleTap = (this.delta > 0 && this.delta <= 250 && Math.abs(this.preTapPosition.x - this.x1) < 30 && Math.abs(this.preTapPosition.y - this.y1) < 30);
             }
             this.preTapPosition.x = this.x1;
             this.preTapPosition.y = this.y1;
             this.last = this.now;
             var preV = this.preV,
+                //获取触摸点的数量
                 len = evt.touches.length;
+            //触摸点的数量大于1，表示是多手指操作
             if (len > 1) {
                 this._cancelLongTap();
                 this._cancelSingleTap();
+                //如果是多手指操作的，计算出两个手指触摸的位置的间距，水平间距和垂直间距
                 var v = { x: evt.touches[1].pageX - this.x1, y: evt.touches[1].pageY - this.y1 };
                 preV.x = v.x;
                 preV.y = v.y;
@@ -169,13 +184,18 @@
                 this._preventTap = true;
             }.bind(this), 750);
         },
+        //手指滑动时触发的事件
         move: function (evt) {
             if (!evt.touches) return;
             var preV = this.preV,
                 len = evt.touches.length,
+                //获取手指触点相对于HTML文档左边沿的的X坐标
                 currentX = evt.touches[0].pageX,
+                //获取手指触点相对于HTML文档上边沿的的Y坐标
                 currentY = evt.touches[0].pageY;
+            //手指滑动的时候，就可以判定当前的操作不是双击了，所以把双击操作的状态设为false
             this.isDoubleTap = false;
+            //多个手指操作
             if (len > 1) {
                 var sCurrentX = evt.touches[1].pageX,
                     sCurrentY = evt.touches[1].pageY

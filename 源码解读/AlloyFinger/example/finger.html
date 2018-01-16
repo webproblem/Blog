@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>测试页面</title>
     <script type="text/javascript" src="./mtouch.js"></script>
-    <script type="text/javascript" src="http://alloyteam.github.io/AlloyFinger/asset/transform.js"></script>
+    <script type="text/javascript" src="https://alloyteam.github.io/AlloyFinger/asset/transform.js"></script>
     <style media="screen">
         * {
             margin: 0;
@@ -92,6 +92,18 @@
                   </div>
               </div>
           </div>
+
+          <div class="demo-item">
+              <div class="touch-box">
+                  <div class="title">pinch测试</div>
+                  <div class="img-box" id="pinch-box">
+                      <img src="./static/test.jpg" alt="">
+                      <div class="overlay" id="pinch-overlay">
+                          <img src="./static/sure.png" alt="">
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
 
       <script type="text/javascript">
@@ -117,7 +129,14 @@
           var doubleTapBox = document.getElementById("doubleTap-box");
           new mtouch(doubleTapBox, {
               doubleTap: function() {
+                  toggleDom("#doubleTap-overlay");
                   console.log("doubleTap操作");
+              }
+          })
+
+          var pinchBox = document.getElementById("pinch-box");
+          new mtouch(pinchBox, {
+              multipointStart: function() {
               }
           })
 
