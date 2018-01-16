@@ -46,8 +46,6 @@
         this.multipointStart = wrapFunc(this.element, options.multipointStart || temp);
         this.multipointEnd = wrapFunc(this.element, options.multipointEnd || temp);
         this.pinch = wrapFunc(this.element, options.pinch || temp);
-        this.twoFingerPressMove = wrapFunc(this.element, options.twoFingerPressMove || temp);
-        this.rotate = wrapFunc(this.element, options.rotate || temp);
 
         this.preV = { x: null, y: null };
         this.pinchStartLen = null;
@@ -90,12 +88,22 @@
             }.bind(this), 750)
         },
         move: function(evt) {
-            alert(1)
-            if (!evt.touches) return;
-
+            var preV = this.preV,
+                len = evt.touches.length,
+                currentX = evt.touches[0].pageX,
+                currentY = evt.touches[0].pageY;
+            this.isDoubleTap = false;
+            if (len > 1) {
+                var sCurrentX = evt.touches[1].pageX,
+                    sCurrentY = evt.touches[1].pageY
+                var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
+                if (this.pinchStartLen > 0) {
+                    alert(this.pinchStartLen);
+                    evt.zoom = getLen(v) / this.pinchStartLen;
+                    this.pinch.dispatch(evt, this.element);
+                }
+            }
             this.touchMove.dispatch(evt, this.element);
-
-            this._cancelLongTap();
         },
         end: function(evt) {
             this._cancelLongTap();
