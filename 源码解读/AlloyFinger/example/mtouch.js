@@ -88,6 +88,7 @@
             }.bind(this), 750)
         },
         move: function(evt) {
+            if (!evt.touches) return;
             var preV = this.preV,
                 len = evt.touches.length,
                 currentX = evt.touches[0].pageX,
@@ -97,13 +98,53 @@
                 var sCurrentX = evt.touches[1].pageX,
                     sCurrentY = evt.touches[1].pageY
                 var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
-                if (this.pinchStartLen > 0) {
-                    alert(this.pinchStartLen);
-                    evt.zoom = getLen(v) / this.pinchStartLen;
-                    this.pinch.dispatch(evt, this.element);
+
+                if (preV.x !== null) {
+                    if (this.pinchStartLen > 0) {
+                        evt.zoom = getLen(v) / this.pinchStartLen;
+                        this.pinch.dispatch(evt, this.element);
+                    }
+
+                    evt.angle = getRotateAngle(v, preV);
+                    this.rotate.dispatch(evt, this.element);
                 }
+                preV.x = v.x;
+                preV.y = v.y;
+
+                if (this.x2 !== null && this.sx2 !== null) {
+                    evt.deltaX = (currentX - this.x2 + sCurrentX - this.sx2) / 2;
+                    evt.deltaY = (currentY - this.y2 + sCurrentY - this.sy2) / 2;
+                } else {
+                    evt.deltaX = 0;
+                    evt.deltaY = 0;
+                }
+                this.twoFingerPressMove.dispatch(evt, this.element);
+
+                this.sx2 = sCurrentX;
+                this.sy2 = sCurrentY;
+            } else {
+                if (this.x2 !== null) {
+                    evt.deltaX = currentX - this.x2;
+                    evt.deltaY = currentY - this.y2;
+
+                } else {
+                    evt.deltaX = 0;
+                    evt.deltaY = 0;
+                }
+
+
+                this.pressMove.dispatch(evt, this.element);
             }
+
             this.touchMove.dispatch(evt, this.element);
+
+            this._cancelLongTap();
+            this.x2 = currentX;
+            this.y2 = currentY;
+
+            if (len > 1) {
+                evt.preventDefault();
+            }
         },
         end: function(evt) {
             this._cancelLongTap();
