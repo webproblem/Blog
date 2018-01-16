@@ -147,6 +147,7 @@
               },
               pinch: function(evt) {
                   try{
+                      alert(initScale * evt.zoom);
                       pinchBox.scaleX = pinchBox.scaleY = initScale * evt.zoom;
                   }catch(e) {
                       alert(e);
