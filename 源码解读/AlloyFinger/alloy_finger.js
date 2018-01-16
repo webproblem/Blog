@@ -23,6 +23,7 @@
         return Math.acos(r);
     }
 
+    //利用cross结果的正负来判断旋转的方向,如果值大于0，表示方向是逆时针，值小于0，表示方向顺时针
     function cross(v1, v2) {
         return v1.x * v2.y - v2.x * v1.y;
     }
@@ -62,7 +63,7 @@
         }
     }
 
-    //观察者模式，主体是HandlerAdmin，
+    //观察者模式，主体是HandlerAdmin
     function wrapFunc(el, handler) {
         var handlerAdmin = new HandlerAdmin(el);
         handlerAdmin.add(handler);
@@ -102,24 +103,38 @@
 
         //订阅者
 
-        //旋转
+        //旋转操作（多指操作）
         this.rotate = wrapFunc(this.element, option.rotate || noop);
-        //触摸开始
+        //手指触摸开始
         this.touchStart = wrapFunc(this.element, option.touchStart || noop);
         //多指触摸开始
         this.multipointStart = wrapFunc(this.element, option.multipointStart || noop);
         //多指触摸结束
         this.multipointEnd = wrapFunc(this.element, option.multipointEnd || noop);
+        //捏（缩放操作）
         this.pinch = wrapFunc(this.element, option.pinch || noop);
+        //手指划过操作（兼容单个手指操作，多个手指操作）
         this.swipe = wrapFunc(this.element, option.swipe || noop);
+        //点击操作
         this.tap = wrapFunc(this.element, option.tap || noop);
+        //双击操作
         this.doubleTap = wrapFunc(this.element, option.doubleTap || noop);
+        //长按操作
         this.longTap = wrapFunc(this.element, option.longTap || noop);
+        //点击操作
+        //tap操作和singleTap操作的区别在于，如果是在一定时间内只是单击一次的话，触发的操作顺序是tap->singleTap
+        //如果是在一定时间内连续多次点击的话（包括双击操作），只会执行tap操作，不会执行singleTap操作
+        //singleTap操作其实就类似于鼠标click事件，click事件作用到移动端页面的时候，会存在延时触发事件，会先触发touch事件再执行click事件
         this.singleTap = wrapFunc(this.element, option.singleTap || noop);
+        //单个手指触摸滑动操作
         this.pressMove = wrapFunc(this.element, option.pressMove || noop);
+        //两个手指触摸滑动操作
         this.twoFingerPressMove = wrapFunc(this.element, option.twoFingerPressMove || noop);
+        //触摸滑动
         this.touchMove = wrapFunc(this.element, option.touchMove || noop);
+        //触摸结束，手指离开屏幕
         this.touchEnd = wrapFunc(this.element, option.touchEnd || noop);
+        //系统原因中断手势操作
         this.touchCancel = wrapFunc(this.element, option.touchCancel || noop);
 
         this._cancelAllHandler = this.cancelAll.bind(this);
@@ -134,9 +149,6 @@
         //手指按下触摸操作的时间戳
         this.now = null;
         //接收点击操作时的定时器返回的值，用于清除定时器
-        //tap操作和singleTap操作的区别在于，如果是在一定时间内只是单击一次的话，触发的操作顺序是tap->singleTap
-        //如果是在一定时间内连续多次点击的话（包括双击操作），只会执行tap操作，不会执行singleTap操作
-        //singleTap操作其实就类似于鼠标click事件，click事件作用到移动端页面的时候，会存在延时触发事件，会先触发touch事件再执行click事件
         this.tapTimeout = null;
         //接收点击操作时的定时器返回的值，用于清除定时器
         this.singleTapTimeout = null;
@@ -332,13 +344,14 @@
             return Math.abs(x1 - x2) >= Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
         },
 
-        //自定义事件
+        //绑定自定义事件
         on: function(evt, handler) {
             if(this[evt]) {
                 this[evt].add(handler);
             }
         },
 
+        //解绑自定义事件
         off: function(evt, handler) {
             if(this[evt]) {
                 this[evt].del(handler);
