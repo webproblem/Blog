@@ -4,9 +4,9 @@
  */
 ; (function () {
     //获取多指触摸操作的时候，手指触摸的位置之间的距离
-    //多指触摸操作的时候，v.x表示手指之间的水平间距，v.y表示垂直间距，利用勾股定理的原理计算出手指触点之间的直线距离
+    //多指触摸操作的时候，v.x表示手指之间的水平间距，v.y表示垂直间距，利用勾股定理的公式计算出手指触点之间的直线距离
     //详解：将v.x的水平间距和v.y的垂直间距用直线连接起来，就形成了一个直角三角形的两条垂直边，指触点之间的直线距离就代表直角三角形的斜边
-    //那么利用勾股定理就可以很容易的计算出斜边的长度，也就是手指触点之间的直线距离
+    //那么利用勾股定理公式就可以很容易的计算出斜边的长度，也就是手指触点之间的直线距离
     function getLen(v) {
         return Math.sqrt(v.x * v.x + v.y * v.y);
     }
@@ -89,6 +89,7 @@
         this.element.addEventListener("touchend", this.end, false);
         this.element.addEventListener("touchcancel", this.cancel, false);
 
+        //存储两个或多个手指触摸点的位置的间距，水平间距和垂直间距
         this.preV = { x: null, y: null };
         //存储多指触摸操作时，手指触摸位置之间的距离
         this.pinchStartLen = null;
@@ -100,9 +101,14 @@
         var noop = function () { };
 
         //订阅者
+
+        //旋转
         this.rotate = wrapFunc(this.element, option.rotate || noop);
+        //触摸开始
         this.touchStart = wrapFunc(this.element, option.touchStart || noop);
+        //多指触摸开始
         this.multipointStart = wrapFunc(this.element, option.multipointStart || noop);
+        //多指触摸结束
         this.multipointEnd = wrapFunc(this.element, option.multipointEnd || noop);
         this.pinch = wrapFunc(this.element, option.pinch || noop);
         this.swipe = wrapFunc(this.element, option.swipe || noop);
@@ -169,10 +175,12 @@
             if (len > 1) {
                 this._cancelLongTap();
                 this._cancelSingleTap();
-                //如果是多手指操作的，计算出两个手指触摸的位置的间距，水平间距和垂直间距
+                //如果是多手指操作的，计算出手指触摸点的位置的间距，水平间距和垂直间距
                 var v = { x: evt.touches[1].pageX - this.x1, y: evt.touches[1].pageY - this.y1 };
                 preV.x = v.x;
                 preV.y = v.y;
+
+                //获取手指触摸点的直线距离
                 this.pinchStartLen = getLen(preV);
                 this.multipointStart.dispatch(evt, this.element);
             }
@@ -201,12 +209,16 @@
                     sCurrentY = evt.touches[1].pageY
                 var v = { x: evt.touches[1].pageX - currentX, y: evt.touches[1].pageY - currentY };
 
+                //多指操作时，且触摸点位置的间距存在，也就是preV.x或者preV.y存在的时候才能执行pinch操作，这个判断条件必须存在
+                //（因为可能存在当多个手指触摸屏幕时，那么存在多个触摸点，但是在滑动操作的同时，只保留了一个手指触摸点，其他手指移开屏幕这样的情况，这种情况就不能执行pinch操作
                 if (preV.x !== null) {
                     if (this.pinchStartLen > 0) {
+                        //计算出缩放比例（当前手指触摸点的直线距离 / 上一次的手指触摸点的直线距离）
                         evt.zoom = getLen(v) / this.pinchStartLen;
                         this.pinch.dispatch(evt, this.element);
                     }
 
+                    //旋转手势操作
                     evt.angle = getRotateAngle(v, preV);
                     this.rotate.dispatch(evt, this.element);
                 }
@@ -315,10 +327,12 @@
         _cancelSingleTap: function () {
             clearTimeout(this.singleTapTimeout);
         },
+        //判定滑动的方向
         _swipeDirection: function (x1, x2, y1, y2) {
             return Math.abs(x1 - x2) >= Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
         },
 
+        //自定义事件
         on: function(evt, handler) {
             if(this[evt]) {
                 this[evt].add(handler);
@@ -331,17 +345,21 @@
             }
         },
 
+        //销毁掉所有的操作数据
         destroy: function() {
+            //清除所有的定时器操作
             if(this.singleTapTimeout) clearTimeout(this.singleTapTimeout);
             if(this.tapTimeout) clearTimeout(this.tapTimeout);
             if(this.longTapTimeout) clearTimeout(this.longTapTimeout);
             if(this.swipeTimeout) clearTimeout(this.swipeTimeout);
 
+            //解绑所有的监听事件
             this.element.removeEventListener("touchstart", this.start);
             this.element.removeEventListener("touchmove", this.move);
             this.element.removeEventListener("touchend", this.end);
             this.element.removeEventListener("touchcancel", this.cancel);
 
+            //取消所有的订阅
             this.rotate.del();
             this.touchStart.del();
             this.multipointStart.del();
@@ -358,6 +376,7 @@
             this.touchEnd.del();
             this.touchCancel.del();
 
+            //自空所有的数据
             this.preV = this.pinchStartLen = this.zoom = this.isDoubleTap = this.delta = this.last = this.now = this.tapTimeout = this.singleTapTimeout = this.longTapTimeout = this.swipeTimeout = this.x1 = this.x2 = this.y1 = this.y2 = this.preTapPosition = this.rotate = this.touchStart = this.multipointStart = this.multipointEnd = this.pinch = this.swipe = this.tap = this.doubleTap = this.longTap = this.singleTap = this.pressMove = this.touchMove = this.touchEnd = this.touchCancel = this.twoFingerPressMove = null;
 
             return null;
