@@ -135,22 +135,17 @@
               }
           })
 
-          var pinchBox = document.getElementById("pinch-box");
-          Transform(pinchBox);
-          var initScale = 1;
-          new AlloyFinger(pinchBox, {
-              multipointStart: function(evt) {
-                  initScale = pinchBox.scaleX;
-              },
-              pinch: function(evt) {
-                  try{
-                      alert(initScale + "," + evt.zoom);
-                      pinchBox.scaleX = pinchBox.scaleY = initScale * evt.zoom;
-                  }catch(e) {
-                      alert(e);
-                  }
-              }
-          })
+        var pinchBox = document.getElementById("pinch-box");
+        Transform(pinchBox);
+        var initScale = 1;
+        new AlloyFinger(pinchBox, {
+            multipointStart: function () {
+                initScale = pinchBox.scaleX;
+            },
+            pinch: function (evt) {
+                pinchBox.scaleX = pinchBox.scaleY = initScale * evt.zoom;
+            }
+        });
 
           function toggleDom(element) {
               if(!element) return;
