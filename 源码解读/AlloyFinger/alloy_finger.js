@@ -101,7 +101,10 @@
         //定义一个空函数
         var noop = function () { };
 
-        //订阅者
+        /**
+         * API部分
+         * 订阅者
+         */
 
         //旋转操作（多指操作）
         this.rotate = wrapFunc(this.element, option.rotate || noop);
