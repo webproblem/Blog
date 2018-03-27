@@ -90,12 +90,12 @@
         this.element.addEventListener("touchend", this.end, false);
         this.element.addEventListener("touchcancel", this.cancel, false);
 
-        //存储两个或多个手指触摸点的位置的间距，水平间距和垂直间距
+        //存储两个手指触摸点的位置的间距，水平间距和垂直间距
         this.preV = { x: null, y: null };
         //存储多指触摸操作时，手指触摸位置之间的距离
         this.pinchStartLen = null;
         this.zoom = 1;
-        //操作是否为双击
+        //是否为双击操作
         this.isDoubleTap = false;
 
         //定义一个空函数
@@ -106,7 +106,7 @@
          * 订阅者
          */
 
-        //旋转操作（多指操作）
+        //旋转操作（多指旋转操作）
         this.rotate = wrapFunc(this.element, option.rotate || noop);
         //手指触摸开始
         this.touchStart = wrapFunc(this.element, option.touchStart || noop);
@@ -159,7 +159,7 @@
         this.longTapTimeout = null;
         this.swipeTimeout = null;
         this.x1 = this.x2 = this.y1 = this.y2 = null;
-        //用于存储手指触摸操作时的水平坐标和垂直坐标
+        //用于存储手指触摸操作时的水平坐标和垂直坐标（如果是多指触摸操作，则记录的是第一个手指触摸的位置）
         this.preTapPosition = { x: null, y: null };
     };
 
@@ -167,11 +167,11 @@
         //手指触摸时触发的事件
         start: function (evt) {
             if (!evt.touches) return;
-            //获取手指触点触摸时的时间戳
+            //存储手指触点开始触摸时的时间戳
             this.now = Date.now();
-            //获取手指触点相对于HTML文档左边沿的的X坐标
+            //存储手指触点相对于HTML文档左边沿的的X坐标
             this.x1 = evt.touches[0].pageX;
-            //获取手指触点相对于HTML文档上边沿的的Y坐标
+            //存储手指触点相对于HTML文档上边沿的的Y坐标
             this.y1 = evt.touches[0].pageY;
             //计算出手指连续按下触摸操作之间的时间间隔
             this.delta = this.now - (this.last || this.now);
@@ -212,9 +212,9 @@
             if (!evt.touches) return;
             var preV = this.preV,
                 len = evt.touches.length,
-                //获取手指触点相对于HTML文档左边沿的的X坐标
+                //获取手指触点在滑动时相对于HTML文档左边沿的的X坐标
                 currentX = evt.touches[0].pageX,
-                //获取手指触点相对于HTML文档上边沿的的Y坐标
+                //获取手指触点在滑动时相对于HTML文档上边沿的的Y坐标
                 currentY = evt.touches[0].pageY;
             //手指滑动的时候，就可以判定当前的操作不是双击了，所以把双击操作的状态设为false
             this.isDoubleTap = false;
@@ -228,7 +228,7 @@
                 //（因为可能存在当多个手指触摸屏幕时，那么存在多个触摸点，但是在滑动操作的同时，只保留了一个手指触摸点，其他手指移开屏幕这样的情况，这种情况就不能执行pinch操作
                 if (preV.x !== null) {
                     if (this.pinchStartLen > 0) {
-                        //计算出缩放比例（当前手指触摸点的直线距离 / 上一次的手指触摸点的直线距离）
+                        //计算出缩放比例（当前手指触摸点的直线距离 / 上一次滑动之前的手指触摸点的直线距离）
                         evt.zoom = getLen(v) / this.pinchStartLen;
                         this.pinch.dispatch(evt, this.element);
                     }
@@ -248,8 +248,9 @@
                     evt.deltaY = 0;
                 }
                 this.twoFingerPressMove.dispatch(evt, this.element);
-
+                //存储在移动操作时第二个手指的X坐标位置
                 this.sx2 = sCurrentX;
+                //存储在移动操作时第二个手指的Y坐标位置
                 this.sy2 = sCurrentY;
             } else {
                 if (this.x2 !== null) {
@@ -268,7 +269,9 @@
             this.touchMove.dispatch(evt, this.element);
 
             this._cancelLongTap();
+            //存储在移动操作时第一个手指的X坐标位置
             this.x2 = currentX;
+            //存储在移动操作时第一个手指的Y坐标位置
             this.y2 = currentY;
 
             if (len > 1) {
@@ -288,6 +291,7 @@
             }
 
             //swipe
+            //水平移动间距大于30或者垂直移动间距大于30，就判定为swipe操作
             if ((this.x2 && Math.abs(this.x1 - this.x2) > 30) ||
                 (this.y2 && Math.abs(this.y1 - this.y2) > 30)) {
                 evt.direction = this._swipeDirection(this.x1, this.x2, this.y1, this.y2);
