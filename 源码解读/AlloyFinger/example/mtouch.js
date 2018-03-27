@@ -88,7 +88,7 @@
             }.bind(this), 750)
         },
         move: function(evt) {
-            alert(1)
+            // alert(1)
             this.touchMove.dispatch(evt, this.element);
         },
         end: function(evt) {

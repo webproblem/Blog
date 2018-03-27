@@ -121,7 +121,8 @@
 
           var longTapBox = document.getElementById("longTap-box");
           new mtouch(longTapBox, {
-              longTap: function() {
+              longTap: function(evt) {
+                  evt.preventDefault();
                   toggleDom("#longTap-overlay");
                   console.log("longTap操作");
               }
