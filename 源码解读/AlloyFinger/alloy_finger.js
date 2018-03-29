@@ -3,8 +3,8 @@
  * Github: https://github.com/AlloyTeam/AlloyFinger
  */
 ; (function () {
-    //获取多指触摸操作的时候，手指触摸的位置之间的距离
-    //多指触摸操作的时候，v.x表示手指之间的水平间距，v.y表示垂直间距，利用勾股定理的公式计算出手指触点之间的直线距离
+    //获取多指触点操作的时候，手指触点的位置之间的距离
+    //多指触点操作的时候，v.x表示手指触点之间的水平间距，v.y表示垂直间距，利用勾股定理的公式计算出手指触点之间的直线距离
     //详解：将v.x的水平间距和v.y的垂直间距用直线连接起来，就形成了一个直角三角形的两条垂直边，指触点之间的直线距离就代表直角三角形的斜边
     //那么利用勾股定理公式就可以很容易的计算出斜边的长度，也就是手指触点之间的直线距离
     function getLen(v) {
@@ -27,7 +27,7 @@
     function cross(v1, v2) {
         return v1.x * v2.y - v2.x * v1.y;
     }
-
+    //利用数学向量求出旋转角度
     function getRotateAngle(v1, v2) {
         var angle = getAngle(v1, v2);
         if (cross(v1, v2) > 0) {
@@ -92,7 +92,7 @@
 
         //存储两个手指触摸点的位置的间距，水平间距和垂直间距
         this.preV = { x: null, y: null };
-        //存储多指触摸操作时，手指触摸位置之间的距离
+        //存储多指触摸操作时，手指触点位置之间的距离
         this.pinchStartLen = null;
         this.zoom = 1;
         //是否为双击操作
@@ -135,7 +135,7 @@
         this.twoFingerPressMove = wrapFunc(this.element, option.twoFingerPressMove || noop);
         //触摸滑动
         this.touchMove = wrapFunc(this.element, option.touchMove || noop);
-        //触摸结束，手指离开屏幕
+        //触摸结束，手指触点离开屏幕
         this.touchEnd = wrapFunc(this.element, option.touchEnd || noop);
         //系统原因中断手势操作
         this.touchCancel = wrapFunc(this.element, option.touchCancel || noop);
@@ -195,7 +195,7 @@
                 preV.x = v.x;
                 preV.y = v.y;
 
-                //获取手指触摸点的直线距离
+                //存储手指触点间的直线距离
                 this.pinchStartLen = getLen(preV);
                 this.multipointStart.dispatch(evt, this.element);
             }
@@ -346,7 +346,7 @@
         _cancelSingleTap: function () {
             clearTimeout(this.singleTapTimeout);
         },
-        //判定滑动的方向
+        //判定swipe滑动的方向
         _swipeDirection: function (x1, x2, y1, y2) {
             return Math.abs(x1 - x2) >= Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
         },

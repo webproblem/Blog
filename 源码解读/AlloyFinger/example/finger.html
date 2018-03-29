@@ -105,7 +105,29 @@
                   </div>
               </div>
           </div>
+
+          <div class="demo-item">
+            <div class="touch-box">
+              <div class="title">点透测试</div>
+              <div class="img-box" id="A-element">
+                <img src="./static/test.jpg" alt="">
+                <div class="overlay" id="B-element" style="display: block;">
+                    <img src="./static/sure.png" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
+
+      <script type="text/javascript">
+          document.getElementById("B-element").addEventListener("touchstart", function() {
+              this.style.display = "none";
+              console.log("B元素隐藏了");
+          })
+          document.getElementById("A-element").onclick = function() {
+              alert("我是A元素的点击事件");
+          }
+      </script>
 
       <script type="text/javascript">
           var tapBox = document.getElementById("tap-box");
