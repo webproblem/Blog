@@ -32,17 +32,25 @@
                 result: 0
             },
             methods: {
+                toPrecision: function(data, maxPrecision) {
+                    if (maxPrecision === undefined) maxPrecision = 0;
+                    return parseFloat(parseFloat(Number(data).toFixed(maxPrecision)));
+                },
                 getDecimalLen: function(val) {
                     return val.toString().split(".")[1] ? val.toString().split(".")[1].length : 0;
                 },
                 getReault: function() {
                     var vm = this;
                     var expandPrecision = null;
-                    var decimal_num1 = vm.getDecimalLen(vm.add_num1);
-                    var decimal_num2 = vm.getDecimalLen(vm.add_num2);
+                    var decimal_num1 = vm.getDecimalLen(parseFloat(vm.add_num1));
+                    var decimal_num2 = vm.getDecimalLen(parseFloat(vm.add_num2));
                     let maxPrecision = Math.max(decimal_num1, decimal_num2);
                     expandPrecision = Math.pow(10, maxPrecision);
-                    vm.result = (vm.add_num1 * expandPrecision + vm.add_num2 * expandPrecision) / expandPrecision;
+                    //简单写法
+                    // vm.result = (vm.add_num1 * expandPrecision + vm.add_num2 * expandPrecision) / expandPrecision;
+        
+                    //严谨写法
+                    vm.result = vm.toPrecision((vm.add_num1 * expandPrecision + vm.add_num2 * expandPrecision) / expandPrecision, maxPrecision);
                 }
             }
         })
