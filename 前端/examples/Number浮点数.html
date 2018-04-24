@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo</title>
+    <link rel="stylesheet" href="./style/common.css">
+    <!-- import Vue.js -->
+    <script src="https://vuejs.org/js/vue.min.js"></script>
+    <!-- import stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">
+    <!-- import iView -->
+    <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
+</head>
+<body>
+    <div id="app" class="demo">
+        <div class="add-main">
+            <input type="number" v-model="add_num1"></input> + 
+            <input type="number" v-model="add_num2"></input> 
+            <i-button type="primary" @click="getReault">计算结果</i-button>
+            = {{ result }}
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                add_num1: 0,
+                add_num2: 0,
+                result: 0
+            },
+            methods: {
+                getDecimalLen: function(val) {
+                    return val.toString().split(".")[1] ? val.toString().split(".")[1].length : 0;
+                },
+                getReault: function() {
+                    var vm = this;
+                    var expandPrecision = null;
+                    var decimal_num1 = vm.getDecimalLen(vm.add_num1);
+                    var decimal_num2 = vm.getDecimalLen(vm.add_num2);
+                    let maxPrecision = Math.max(decimal_num1, decimal_num2);
+                    expandPrecision = Math.pow(10, maxPrecision);
+                    vm.result = (vm.add_num1 * expandPrecision + vm.add_num2 * expandPrecision) / expandPrecision;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

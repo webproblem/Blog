@@ -64,4 +64,42 @@ IEEE754 标准规定了32位单精度浮点数在计算机存储中表示用1位
 
 可以在网上搜索一些成熟完善的插件，例如 [mathjs](https://github.com/josdejong/mathjs)。当然在简单的场景下，也可以自己来处理这类问题。
 
-研究过 iview 和 element UI 的 InputNumber 计数器组件源码
+研究过 iview 和 element UI 的 InputNumber 计数器组件源码，大致的解决思路就是，两个数进行相加或者相减运算时，如果两个数中至少一个是小数值，那么就先将这两个数扩大10的n次方倍数进行运算，再将运算结果去除以扩大的倍数，得到最终的结果值，扩大的倍数由小数值的小数位数决定。如果只存在一个小数值，那么n的值就是小数的小数位长度，如果两个值都是小数，那么就先比较下哪个值的小数位长度较长，n的值就取较长的小数位长度。
+
+用 Vue 来实现下这种解决方案。
+```html
+<div id="app" class="demo">
+    <div class="add-main">
+        <input type="number" v-model="add_num1"></input> + 
+        <input type="number" v-model="add_num2"></input> 
+        <i-button type="primary" @click="getReault">计算结果</i-button>
+        = {{ result }}
+    </div>
+</div>
+```
+```javascript
+new Vue({
+    el: '#app',
+    data: {
+        add_num1: 0,
+        add_num2: 0,
+        result: 0
+    },
+    methods: {
+        getDecimalLen: function(val) {
+            return val.toString().split(".")[1] ? val.toString().split(".")[1].length : 0;
+        },
+        getReault: function() {
+            var vm = this;
+            var expandPrecision = null;
+            var decimal_num1 = vm.getDecimalLen(vm.add_num1);
+            var decimal_num2 = vm.getDecimalLen(vm.add_num2);
+            let maxPrecision = Math.max(decimal_num1, decimal_num2);
+            expandPrecision = Math.pow(10, maxPrecision);
+            vm.result = (vm.add_num1 * expandPrecision + vm.add_num2 * expandPrecision) / expandPrecision;
+        }
+    }
+})
+```
+
+这种方案只适用于简单的运用场景，在涉及金额等复杂的运算场景中，最好是选择第三方完善的插件。
