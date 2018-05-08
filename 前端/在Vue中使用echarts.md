@@ -77,21 +77,25 @@ new Vue({
         },
         //绘制折线图表
         drawLineChart() {
+            const vm = this;
             vm.lineChart = echarts.init(document.getElementById('line-chart'));
             vm.lineChart.setOption(vm.lineChartOption);
         },
         //绘制柱状图表
         drawBarChart() {
+            const vm = this;
             vm.barChart = echarts.init(document.getElementById('bar-chart'));
             vm.barChart.setOption(vm.barChartOption);
         },
         //绘制饼状图表
         drawPieChart() {
+            const vm = this;
             vm.pieChart = echarts.init(document.getElementById('pie-chart'));
             vm.pieChart.setOption(vm.pieChartOption);
         },
         //在浏览器窗口缩放的时候，图表的尺寸大小也跟着缩放
         resizeChart() {
+            const vm = this;
             const allChart = [
                 vm.lineChart,
                 vm.barChart,
@@ -115,4 +119,41 @@ new Vue({
 
 所有的图表会跟着浏览器窗口缩放而缩放，可以写成一个Vue全局的自定义指令， resize.js:
 ```javascript
+/**
+ * 
+ * vue注册全局自定义指令 v-resize，用于浏览器窗口缩放操作
+ * @param {any} el 
+ * @param {any} binding 
+ */
+function insertedFn (el, binding) {
+    var callback = binding.value;
+    var debounce = 200;
+    var options = {passive: true};
+    var debounceTimeout = null;
+    var onResize = function () {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(callback, debounce, options);
+    }
+
+    window.addEventListener("resize", onResize, options);
+
+    el._onResize = {
+        callback: callback,
+        options: options
+    };
+}
+
+function unbindFn (el, binding) {
+    var callback = el._onResize.callback;
+    var options = el._onResize.options;
+    window.removeEventListener("resize", callback, options);
+    delete el._onResize;
+}
+
+Vue.directive("resize", {
+    inserted: insertedFn,
+    unbind: unbindFn
+})
 ```
+
+这是日常项目中对于在vue中使用echart实践的总结，以后有更加的实践方案再更新这份总结吧。
