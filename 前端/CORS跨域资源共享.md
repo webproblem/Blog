@@ -37,11 +37,11 @@ CORS(跨域资源共享)分为两种，简单请求和非简单请求。
 
 服务端拒绝请求
 
-![服务端拒绝请求](C:/Users/SEELE/Desktop/image/微信截图_20180511172305.png)
+![服务端拒绝请求](../assets/微信截图_20180511172305.png)
 
 返回的错误信息
 
-![返回的错误信息](C:/Users/SEELE/Desktop/image/微信截图_20180511172738.png)
+![返回的错误信息](../assets/微信截图_20180511172738.png)
 
 
 ## 非简单请求
@@ -49,7 +49,7 @@ CORS(跨域资源共享)分为两种，简单请求和非简单请求。
 非简单请求之前，浏览器会先发送一个预检请求，询问服务端，当前的域名是否在服务端设置的允许名单中，得到服务端的确认后，才会发送http请求。预检请求是通过 OPTIONS 方式发送请求的，请求头部字段中除了必要的Origin字段，还包括Access-Contorl-Allow-Methods字段，如果携带了自定义头部信息的话，那请求头部还会包括Access-Control-Headers字段。   
 服务端收到预检请求后，会检查Origin，Access-Contorl-Allow-Methods和Access-Control-Headers字段，确认后会返回响应头信息。
 
-![预检请求](C:/Users/SEELE/Desktop/image/微信截图_20180511175700.png)
+![预检请求](../assets/微信截图_20180511175700.png)
 
 
 
