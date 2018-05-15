@@ -6,11 +6,11 @@
 
     + 浏览器渲染机制
 
-    + event loop事件机制
-
 + ECMAScript
 
     + [Number浮点数运算详解](./ECMAScript/Number浮点数运算详解.md)
+
+    + event loop事件机制
 
 + Network
 
