@@ -52,5 +52,9 @@ CORS(跨域资源共享)分为两种，简单请求和非简单请求。
 ![预检请求](../assets/微信截图_20180511175700.png)
 
 
+## 参考
 
+[http://www.ruanyifeng.com/blog/2016/04/cors.html](http://www.ruanyifeng.com/blog/2016/04/cors.html)
+
+[https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 
