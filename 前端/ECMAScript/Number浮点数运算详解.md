@@ -23,7 +23,7 @@ IEEE754 标准规定了32位单精度浮点数在计算机存储中表示用1位
 
 在 javascript 中，Number 类型的数值都是双精度64位浮点数，那么就符合 IEEE754 标准的双精度浮点数规则，结构如下：
 
-![IEEE754结构](../assets/q3.png)
+![IEEE754结构](https://user-images.githubusercontent.com/20440496/39559164-c5c8a252-4ec6-11e8-9655-753e68bcef01.png)
 
 
 从结构图中可以看出，存储的尾数的长度是52位有效数字，二进制的第一位有效数字必定是1，所以这个值不会被存储在64位中，节省了一个存储空间，所以尾数的最长长度应该是53位有效数字。
@@ -32,8 +32,8 @@ IEEE754 标准规定了32位单精度浮点数在计算机存储中表示用1位
 
 回到刚才的问题，按照正常的流程是会先将 0.1 和 0.2 转换成二进制数值。
 
-![0.1转换二进制](../assets/q1.png)
-![0.2转换二进制](../assets/q2.png)
+![0.1转换二进制](https://user-images.githubusercontent.com/20440496/39559177-ddb3c7ca-4ec6-11e8-9678-db03ab90eee3.png)
+![0.2转换二进制](https://user-images.githubusercontent.com/20440496/39559185-e7a40ce0-4ec6-11e8-873a-dd244dffd1b1.png)
 
 十进制的 0.1 和 0.2 转换成二进制数值都会是无限循环的值
 ```javascript
