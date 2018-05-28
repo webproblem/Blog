@@ -74,7 +74,25 @@
     });
     ```
 
-    Promise 构造函数接收一个函数作为参数，这个函数中存在两个参数 resolve 和 reject。这两个参数都是函数，它们的作用分别是，resolve 表示异步操作成功后将 Promise 状态从 pending 改变为 fulfilled，如果带有参数的话会将参数传递出去；reject 表示异步操作失败后将 Promise 状态从 pending 改变为 rejected，如果带有参数的话会将参数传递出去。
+    Promise 构造函数接收一个函数作为参数，这个函数中存在两个参数 resolve 和 reject。这两个参数都是函数，它们的作用分别是，resolve 表示异步操作成功后将 Promise 状态从 pending 改变为 fulfilled，如果带有参数的话会将参数传递给回调函数；reject 表示异步操作失败后将 Promise 状态从 pending 改变为 rejected，如果带有参数的话会将参数传递给回调函数。
+
+    reject 函数的参数通常是 Error 对象，表示跑出的错误， resolve 函数的参数除了正常的值还可以是 Promise 实例对象。
+
+    ```javascript
+    const promise1 = new Promise(function(resolve, reject) {
+        // ...
+    })
+    const promise2 = new Promise(function(resolve, reject) {
+        resolve(promise1);
+    })
+    promise2.then(function() {
+        // ...
+    }).catch(function() {
+        // ...
+    })
+    ```
+
+    上面例子中， promise2 的 resolve 函数的参数是一个 Promise 实例对象，那么 promise2 实例的状态就由 promise1 实例决定了，就是如果 promise1 的状态是 pending， promise2 的回调函数就会等待 promise1 的状态改变， 如果 promise1 的状态改变了的话， promise2 的回调函数会立即执行。
 
 * Promise.prototype.then
 
@@ -98,6 +116,18 @@
     })
     ```
     then 方法接收两个函数作为参数，第一个参数是状态变为 fulfilled 的回调函数，第二个参数是状态变为 rejected 的回调函数，两个函数分别接收异步操作结果传递出来的参数作为函数的参数。
+
+    ```javascript
+    const promise = new Promise(function(resolve, reject) {
+        resolve(value);
+    })
+    //多个then方法链式调用的时候，前面的then方法返回的值会作为后面的then方法的参数使用
+    promise.then(function(value) {
+        return value;
+    }).then(function(value) {
+        // ...
+    })
+    ```
 
 * Promise.prototype.catch
 
@@ -201,3 +231,8 @@
 * Promise.reject
 
     Promise.reject 首先会生存一个 Promise 实例对象，再将 Promise 实例状态转为 rejected。
+
+
+## 参考
+
+* [https://mengera88.github.io/2017/05/18/Promise%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/](https://mengera88.github.io/2017/05/18/Promise%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/)
