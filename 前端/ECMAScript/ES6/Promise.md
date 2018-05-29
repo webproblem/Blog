@@ -233,6 +233,11 @@
     Promise.reject 首先会生存一个 Promise 实例对象，再将 Promise 实例状态转为 rejected。
 
 
+## 简单 Promise 实现
+
+```javascript
+```
+
 ## 参考
 
 * [https://mengera88.github.io/2017/05/18/Promise%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/](https://mengera88.github.io/2017/05/18/Promise%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/)
