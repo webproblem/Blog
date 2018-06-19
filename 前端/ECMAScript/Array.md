@@ -99,14 +99,44 @@ removeIndexItem(array);
 * 数组clone
 
 * 查找一个字符串中出现次数最多的字符，统计这个次数
+```javascript
+const strings = 'abdndndfdfjdkfsfjhfdffresf';
+const timesObj = strings.split('').reduce((obj, value) => {
+    if(obj[value]) {
+        obj[value]++;
+    }else {
+        obj[value] = 1;
+    }
+    return obj;
+}, {})
+let times = 0, chart = '';
+Object.keys(timesObj).forEach((key) => {
+    if(timesObj[key] > times) {
+        times = timesObj[key];
+        chart = key;
+    }
+})
+console.log(`${chart}: ${timesObj[chart]}`);
+```
 
 * 找出数组中最大值
+```javascript
+//方法一
+const array = [1,7,453,51,545,665,546,763,687,786];
+Math.max.apply(Math,array);
+//方法二
+array.sort((a, b) => {
+    return b - a;
+})
+array[0];
+```
 
 * 数组排序
 
 * 找出数组中唯一的值
 ```javascript
-
+const array = [1,1,3,5,4,7,6,4,6,3,5,2];
+array.filter(item => array.indexOf(item) === array.lastIndexOf(item));
 ```
 
 ## 参考
