@@ -40,7 +40,7 @@ export {age, sex, work};
     export 1;
     // 错误写法二
     const vm = 1;
-    export 1;
+    export vm;
     ```    
 
 ## export default
