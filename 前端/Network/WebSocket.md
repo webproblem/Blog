@@ -1,3 +1,15 @@
+HTTP 请求方式实现客户端与服务器之间实时通信技术存在的缺陷：
+
+* 无法做到数据的实时性
+
+* 服务端不能主动推送消息给客户端
+
+基于 HTTP 请求方式的实现方案：
+
+* AJAX 轮询: 每隔一段时间就向服务端发起请求，服务端接收到请求后查看是否有数据，有就返回，每一次请求都需要建立起 HTTP 连接，需要经过三次握手，而且在没有新数据的情况下建立的 HTTP 请求是无意义的，这样的操作容易消耗资源。
+
+* Long Poll: 通过发起 HTTP 请求建立起连接之后，连接不会被关闭，会继续保持这样的状态询问服务端是否有数据，直到服务端有数据并做出响应后，把数据返回给客户端，该条 HTTP 连接才会被关闭，并且会再次开启新的一条请求连接。
+
 ## WebSocket
 
 * HTML5提供的一种浏览器和服务器之间进行全双工通信协议，2008年产生，2011年成为标准
@@ -33,8 +45,8 @@
 	
 	[https://mp.weixin.qq.com/s/rKvoevbSmtAUoCgOH2lZdQ](https://mp.weixin.qq.com/s/rKvoevbSmtAUoCgOH2lZdQ)
 
-https://juejin.im/post/5afab6e651882542ba07eb41
+    [https://juejin.im/post/5afab6e651882542ba07eb41](https://juejin.im/post/5afab6e651882542ba07eb41)
 
-https://juejin.im/post/5a1bdf676fb9a045055dd99d#heading-6
+    [https://juejin.im/post/5a1bdf676fb9a045055dd99d#heading-6](https://juejin.im/post/5a1bdf676fb9a045055dd99d#heading-6)
 
-https://qiutc.me/post/websocket-guide.html
+    [https://qiutc.me/post/websocket-guide.html](https://qiutc.me/post/websocket-guide.html)
