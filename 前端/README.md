@@ -2,7 +2,7 @@
 
 + Browser
 
-    + [CORS跨域资源共享.md](https://github.com/webproblem/Blog/blob/master/%E5%89%8D%E7%AB%AF/Browser/CORS%E8%B7%A8%E5%9F%9F%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB.md)]
+    + [CORS跨域资源共享](https://github.com/webproblem/Blog/blob/master/%E5%89%8D%E7%AB%AF/Browser/CORS%E8%B7%A8%E5%9F%9F%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB.md)
 + ECMAScript
 
     + [Number 浮点数运算详解](./ECMAScript/Number浮点数运算详解.md)
