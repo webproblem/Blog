@@ -236,6 +236,62 @@
 ## 简单 Promise 实现
 
 ```javascript
+class Promise {
+    constructor(func) {
+        func(this._resolve.bind(this), this._reject.bind(this));
+        this.status = 'pending';
+        this._resolveCallback = [];
+        this._rejectCallback = [];
+        this.resolve = function(data) {
+            if(typeof data.then === 'function') {
+                let promise = new Promise(data.then);
+                promise.status = 'fulfilled';
+                return promise;
+            }else {
+                return new Promise(resolve => resolve(data));
+            }
+        }
+        this.reject = function(data) {
+            if(typeof data.then === 'function') {
+                let promise = new Promise(data.then);
+                promise.status = 'rejected';
+                return promise;
+            }else {
+                return new Promise((_, reject) => reject(data));
+            }
+        }
+    }
+    _resolve(data) {
+        if(this.status === 'rejected') return;
+        this.status = 'fulfilled';
+        setTimeout(() => {
+            this._resolveCallback.forEach(func => setTimeout(() => {
+                func(data);
+            }, 0))
+        })
+    }
+    _reject(data) {
+        if(this.status === 'fulfilled') return;
+        this.status = 'rejected';
+        setTimeout(() => {
+            this._rejectCallback.forEach(func => setTimeout(() => {
+                func(data);
+            }, 0))
+        })
+    }
+    then(resolveCallback, rejectCallback) {
+        if(resolveCallback) {
+            this._resolveCallback.push(resolveCallback);
+        }
+        if(rejectCallback) {
+            this._rejectCallback.push(rejectCallback);
+        }
+        return this;
+    }
+    catch(rejectCallback) {
+        return this.then(null, rejectCallback);
+    }
+}
 ```
 
 ## 参考

@@ -836,38 +836,61 @@
   // as much as it can, without ever going more than once per `wait` duration;
   // but if you'd like to disable the execution on the leading edge, pass
   // `{leading: false}`. To disable execution on the trailing edge, ditto.
+  // 函数节流
   _.throttle = function(func, wait, options) {
+    // 定时器，执行上下文，回调函数的参数，执行回调函数的返回值
     var timeout, context, args, result;
+    // 存储上一次触发函数的时间戳
     var previous = 0;
+    // 配置参数
+    // options.leading 为 false
     if (!options) options = {};
 
     var later = function() {
+      console.log(333)
       previous = options.leading === false ? 0 : _.now();
       timeout = null;
       result = func.apply(context, args);
+      // 清空数据，防止内存泄露
       if (!timeout) context = args = null;
     };
 
     var throttled = function() {
+      // 获取当前时间戳
       var now = _.now();
+      // 根据配置的 leading 的值，判断第一次触发是否立即执行回调函数
       if (!previous && options.leading === false) previous = now;
+      // 持续性的两次函数触发（上一次和当前）之间的时间间距和设定的延时时间对比
       var remaining = wait - (now - previous);
       context = this;
       args = arguments;
+      // 如果持续触发函数之间的时间间距大于设定的延时时间，表示可以立即执行回调函数
+      // throttle 的时间戳实现方式
       if (remaining <= 0 || remaining > wait) {
+        console.log(111)
+        // 如果定时器存在，就先清除定时器，立即执行就不需要定时器了
+        // 避免定时器执行回调函数之前进入到这里，就会执行两次
         if (timeout) {
           clearTimeout(timeout);
           timeout = null;
         }
+        // 重置前一次触发的时间戳
         previous = now;
+        // 执行回调函数
         result = func.apply(context, args);
+        // 清空数据，防止内存泄露，因为变量都存在闭包中，垃圾回收机制无法回收
+        // 前面已经已经处理过 timeout 定时器了，!timeout 无论如何都是成立的，似乎多余的判断
         if (!timeout) context = args = null;
-      } else if (!timeout && options.trailing !== false) {
-        timeout = setTimeout(later, remaining);
+      } else if (!timeout && options.trailing !== false) { 
+        // throttle 的定时器实现方式
+        // 根据配置的 trailing 的值，判断在最后一次触发后是否还执行回调函数
+        // 这里的 remaining 值肯定是大于0且小于设定的延时时间的
+        console.log(222)
+        timeout = setTimeout(later, wait);
       }
       return result;
     };
-
+    // 清除节流
     throttled.cancel = function() {
       clearTimeout(timeout);
       previous = 0;

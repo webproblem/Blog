@@ -8,6 +8,11 @@
     <script src="../Underscore.1.8.3.analysis.js"></script>
 </head>
 <body>
-    
+    <input id="input">
 </body>
+<script>
+    var throttled = _.throttle(function(){}, 3000);
+    // window.addEventListener('resize', throttled)
+    document.getElementById('input').addEventListener('keyup', throttled)
+</script>
 </html>
