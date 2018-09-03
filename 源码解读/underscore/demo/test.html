@@ -11,7 +11,7 @@
     <input id="input">
 </body>
 <script>
-    var throttled = _.throttle(function(){}, 3000);
+    var throttled = _.debounce(function(){console.log('测试')}, 3000, true);
     // window.addEventListener('resize', throttled)
     document.getElementById('input').addEventListener('keyup', throttled)
 </script>

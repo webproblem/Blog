@@ -836,20 +836,29 @@
   // as much as it can, without ever going more than once per `wait` duration;
   // but if you'd like to disable the execution on the leading edge, pass
   // `{leading: false}`. To disable execution on the trailing edge, ditto.
-  // 函数节流
+  /**
+   * 函数节流
+   * @param {Function} func 回调函数 
+   * @param {Nubmer} wait 设定的延时时间
+   * @param {Object} options 配置项
+   */
   _.throttle = function(func, wait, options) {
     // 定时器，执行上下文，回调函数的参数，执行回调函数的返回值
     var timeout, context, args, result;
     // 存储上一次触发函数的时间戳
     var previous = 0;
     // 配置参数
-    // options.leading 为 false
+    // options.leading 为 false，表示禁止第一次触发便立即执行回调函数
+    // options.trailing 为 false，表示禁止最后一次触发后执行回调函数
     if (!options) options = {};
 
     var later = function() {
-      console.log(333)
+      // console.log(333)
+      // 根据 leading 配置参数重置前一次触发的时间戳
       previous = options.leading === false ? 0 : _.now();
+      // 自空定时器
       timeout = null;
+      // 执行回调函数
       result = func.apply(context, args);
       // 清空数据，防止内存泄露
       if (!timeout) context = args = null;
@@ -867,8 +876,8 @@
       // 如果持续触发函数之间的时间间距大于设定的延时时间，表示可以立即执行回调函数
       // throttle 的时间戳实现方式
       if (remaining <= 0 || remaining > wait) {
-        console.log(111)
-        // 如果定时器存在，就先清除定时器，立即执行就不需要定时器了
+        // console.log(111)
+        // 如果定时器存在，就先清除定时器任务，立即执行就不需要定时器了
         // 避免定时器执行回调函数之前进入到这里，就会执行两次
         if (timeout) {
           clearTimeout(timeout);
@@ -885,8 +894,17 @@
         // throttle 的定时器实现方式
         // 根据配置的 trailing 的值，判断在最后一次触发后是否还执行回调函数
         // 这里的 remaining 值肯定是大于0且小于设定的延时时间的
-        console.log(222)
-        timeout = setTimeout(later, wait);
+        // 定时器的延时时间为什么不是设定的 wait 值而是计算之后的 remaining 值
+        // 因为 JavaScript 是单线程的原因，所有的任务不需排队等待执行，JavaScript 任务又分成同步任务和异步任务
+        // setTimeout 定时器作为异步任务会在到了指定的时间时将事件放入到任务队列中等待执行
+        // 只有当主线程上的任务都执行完后才会去任务队列中拉去任务执行
+        // setTimeout 定时器设定的延时时间并不是精准的，因为在执行其他任务的时候可能会耗时
+        // 等到执行了 setTimeout 定时器的回调函数，再获取当前的时间重置前一次触发的时间戳
+        // 中间的时间间隔可能就会大于设定的延时时间，也就是 now - previous > wait
+        // 这样的情况就会导致在高频率的触发事件的时候，总是会立即执行回调函数，而不会进入到这里
+        // 关于 JavaScript 的单线程，可参考文章： https://github.com/webproblem/Blog/issues/2
+        // console.log(222)
+        timeout = setTimeout(later, remaining);
       }
       return result;
     };
@@ -904,27 +922,45 @@
   // be triggered. The function will be called after it stops being called for
   // N milliseconds. If `immediate` is passed, trigger the function on the
   // leading edge, instead of the trailing.
+  /**
+   * 函数防抖
+   * @param {Function} func 回调函数 
+   * @param {Number} wait 设定的延时时间
+   * @param {Boolean} immediate 是否立即执行
+   */
   _.debounce = function(func, wait, immediate) {
+    // 定时器，执行回调函数的返回值
     var timeout, result;
 
     var later = function(context, args) {
+      // 自空定时器
       timeout = null;
       if (args) result = func.apply(context, args);
     };
 
+    // 这里使用了类 ES6 rest 参数的实现函数，当感觉有点多余，而且同样的 _.throttle 没使用到，也没影响
+    // 试了对 _.throttle 使用 restArgs 函数，似乎没什么不同
     var debounced = restArgs(function(args) {
+      // 每次触发的时候先清除之前的定时器任务
       if (timeout) clearTimeout(timeout);
+      // immediate 为 true，表示在触发后会立即执行回调函数，而后在设定的时间内，持续触发，不会执行回调函数，只能在到达了设定的时间后，再次触发才会立即执行回调函数
+      // immediate 为 false，表示的是触发后需要等到达了设定的时间后，才会执行回调函数，在这个过程中如果发生持续触发，定时器的计时又回重新开始计时
       if (immediate) {
+        // 如果设置立即执行的话，进入到这里
+        // timeout 定时器没自空的话，表示还在设定时间内，此时触发并不会执行回调函数
         var callNow = !timeout;
+        // 到达设定时间后，自空定时器，这样下次触发会立即执行回调函数
         timeout = setTimeout(later, wait);
         if (callNow) result = func.apply(this, args);
       } else {
+        // 如果没有设置立即执行的话，进入到这里
         timeout = _.delay(later, wait, this, args);
       }
 
       return result;
     });
 
+    // 清除防抖
     debounced.cancel = function() {
       clearTimeout(timeout);
       timeout = null;
