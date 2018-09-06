@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Demo</title>
-    <link rel="stylesheet" href="./style/common.css">
+    <link rel="stylesheet" href="../../assets/style/common.css">
     <!-- import Vue.js -->
     <script src="https://vuejs.org/js/vue.min.js"></script>
     <!-- import stylesheet -->
@@ -16,8 +16,8 @@
 <body>
     <div id="app" class="demo">
         <div class="add-main">
-            <input type="number" v-model="add_num1"></input> + 
-            <input type="number" v-model="add_num2"></input> 
+            <input type="number" v-model="add_num1"> + 
+            <input type="number" v-model="add_num2"> 
             <i-button type="primary" @click="getReault">计算结果</i-button>
             = {{ result }}
         </div>

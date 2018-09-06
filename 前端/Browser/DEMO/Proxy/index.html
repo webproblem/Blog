@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Proxy 代理</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+    <script>
+        $.ajax({
+            type: 'post',
+            url: 'http://localhost:3000',
+            success: function(res) {
+                alert('获取到的数据了，打开控制台瞧瞧');
+                console.log(res);
+            }
+        })
+    </script>
+</body>
+</html>

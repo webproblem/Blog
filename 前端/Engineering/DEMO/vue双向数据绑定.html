@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>vue双向数据绑定</title>
+  <script src="https://unpkg.com/vue@2.5.0/dist/vue.js"></script>
+  <script src=".../../../../assets/jquery.js"></script>
+</head>
+<body>
+	<div id="app">
+		<input type="text" v-model="text">
+		{{ text }}
+    <!-- <span>{{person.name}}</span>
+    <button @click="change(1)">点击</button>
+    <button @click="change(1)">点击2</button> -->
+	</div>
+
+	<script type="text/javascript">
+		function compile(node, vm) {
+			var reg = /\{\{(.*)\}\}/;
+
+			if(node.nodeType == 1) {
+				var attr = node.attributes;
+				for(var i=0; i<attr.length; i++) {
+					if(attr[i].nodeName == 'v-model') {
+						var name = attr[i].nodeValue;
+						node.addEventListener('input', function(e) {
+							vm.data[name] = e.target.value;
+						})
+						node.value = vm.data[name];
+						node.removeAttribute('v-model');
+            new Watcher(vm, node, name, 'input');
+					}
+				}
+			}else if(node.nodeType == 3) {
+				if(reg.test(node.nodeValue)) {
+					var name = RegExp.$1.trim();
+					node.nodeValue = vm.data[name];
+          new Watcher(vm, node, name, 'text');
+				}
+			}
+		}
+		function nodeToFragment(node, vm) {
+			var fragement = document.createDocumentFragment();
+			var child = null;
+			while(child = node.firstChild) {
+				compile(child, vm);
+				fragement.appendChild(child);
+			}
+			return fragement;
+		}
+		function observe(obj, vm) {
+			Object.keys(obj).forEach(function(key) {
+				defineProperty(obj, key, obj[key]);
+			})
+		}
+		function defineProperty(obj, key, value) {
+      if(typeof obj[key] == 'object') {
+        observe(obj[key]);
+      }
+      var dep = new Dep();
+			Object.defineProperty(obj, key, {
+				get: function() {
+          if(Dep.target) dep.addSub(Dep.target);
+					return value;
+				},
+				set: function(newValue) {
+					if(newValue == value) return;
+					// value = newValue;
+          dep.notify();
+				}
+			})
+		}
+    function Dep() {
+      this.subs = [];
+    }
+    Dep.prototype = {
+      addSub: function(sub) {
+        this.subs.push(sub);
+      },
+      notify: function() {
+        this.subs.forEach(function(sub) {
+          sub.update();
+        })
+      }
+    };
+    function Watcher(vm, node, name, nodeType) {
+      Dep.target = this;
+      this.vm = vm;
+      this.node = node;
+      this.name = name;
+      this.nodeType = nodeType;
+      this.update();
+      Dep.target = null;
+    }
+    Watcher.prototype = {
+      update: function() {
+        this.get();
+        if(this.nodeType == 'text') {
+          this.node.nodeValue = this.value;
+        }else if(this.nodeType == 'input') {
+          this.node.value = this.value;
+        }
+      },
+      get: function() {
+        this.value = this.vm.data[this.name];
+      }
+    };
+		function Vue(options) {
+			this.data = options.data;
+			observe(this.data, this);
+			var id = options.el.replace(options.el.charAt(0),'');
+			var node = nodeToFragment(document.getElementById(id), this);
+			document.getElementById(id).appendChild(node);
+		}
+	</script>
+
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				text: '测试',
+        msg: '哈哈',
+        person: {
+          name: '白展堂'
+        },
+        state: false
+			},
+      watch: {
+        state(value) {
+          if(value) {
+            console.log('change');
+          }
+        }
+      },
+      methods: {
+        change(type) {
+          this.state = false;
+          Vue.nextTick(function() {
+            this.state = true;
+          })
+        }
+      }
+		})
+	</script>
+</body>
+</html>
+

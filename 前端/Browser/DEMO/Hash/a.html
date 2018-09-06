@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = "http://localhost:8081/b.html#data";
+        document.body.appendChild(iframe);
+        
+        function checkHash() {
+            try {
+              var data = location.hash ? location.hash.substring(1) : '';
+              console.log('获得到的数据是：', data);
+            }catch(e) {}
+        }
+        window.addEventListener('hashchange', function(e) {
+            console.log('监听到hash的变化：', location.hash.substring(1));
+        })
+    </script>
+</body>
+</html>

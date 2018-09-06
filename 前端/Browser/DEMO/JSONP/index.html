@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSON 跨域</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+    <!-- 通过原生使用 script 标签 -->
+    <script>
+        function jsonpCallback(data) {
+            alert('获取到的数据了，打开控制台瞧瞧');
+            console.log(data);
+        }
+    </script>
+    <script src="http://127.0.0.1:3000?callback=jsonpCallback"></script>
+
+    <!-- AJAX GET 请求 -->
+    <!-- <script>
+        function jsonpCallback(data) {
+            alert('获取到的数据了，打开控制台瞧瞧');
+            console.log(data);
+        }
+        $.ajax({
+            type: 'GET',
+            url: 'http://127.0.0.1:3000',
+            dataType: 'jsonp',
+            jsonpCallback: 'jsonpCallback'
+        })
+    </script> -->
+</body>
+</html>

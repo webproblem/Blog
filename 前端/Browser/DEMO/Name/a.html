@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>window.name 跨域</title>
+</head>
+<body>
+    <script>
+        var data = null;
+        var state = 0;
+        var iframe = document.createElement('iframe');
+        iframe.src = "http://localhost:8081/b.html";
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        iframe.onload = function() {
+            if(state === 0) {
+                iframe.src = "http://localhost:8080/c.html";
+                state = 1;
+            }else if(state === 1) {
+                data = iframe.contentWindow.name;
+                console.log('收到数据:', data);
+            }
+        }
+    </script>
+</body>
+</html>

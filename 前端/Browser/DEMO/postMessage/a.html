@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>postMessage 跨域</title>
+</head>
+<body>
+    <iframe src="http://localhost:8081/b.html" style='display: none;'></iframe>
+    <script>
+        window.onload = function() {
+            var targetOrigin = 'http://localhost:8081';
+            var data = {
+                name: '武林外传',
+                time: 2005,
+                length: 81,
+                address: '同福客栈'
+            };
+            // 向 b.html 发送消息
+            window.frames[0].postMessage(data, targetOrigin);
+
+            // 接收 b.html 发送的数据
+            window.addEventListener('message', function(e) {
+                console.log('b.html 发送来的消息:', e.data);
+            })
+        }
+    </script>
+</body>
+</html>

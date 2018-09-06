@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>postMessage 跨域</title>
+</head>
+<body>
+    <script>
+        var targetOrigin = 'http://localhost:8080';
+        window.addEventListener('message', function(e) {
+            if(e.source != window.parent) {
+                return;
+            }
+            // 接收 a.html 发送的数据
+            console.log('a.html 发送来的消息:', e.data);
+            // 向 a.html 发送消息
+            parent.postMessage('哈哈，我是b页面，我收到你的消息了', targetOrigin);
+        })
+    </script>
+</body>
+</html>

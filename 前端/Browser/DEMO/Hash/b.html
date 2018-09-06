@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+ <script>
+     switch(location.hash) {
+        case '#data':
+            callback();
+            break;
+    }
+     function callback() {
+        var data = "testHash"
+        try {
+            parent.location.hash = data;
+        }catch(e) {
+            var ifrproxy = document.createElement('iframe');
+            ifrproxy.style.display = 'none';
+            ifrproxy.src = 'http://localhost:8080/c.html#' + data;     // 该文件在请求域名的域下
+            document.body.appendChild(ifrproxy);
+        }
+     }
+ </script>   
+</body>
+</html>
