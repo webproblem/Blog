@@ -25,7 +25,7 @@ CORS(跨域资源共享)分为两种，简单请求和非简单请求。
 
 * Access-Control-Allow-Origin: 必须字段，该字段用于设置可以进行通信的域名，可以是具体的某个域名，也可以用*号表示接受任意的域名下的请求。
 
-* Access-Control-Allow-Methods: 必须字段，表示允许以哪些http请求的方式进行通信，多个值的时候是以逗号分隔的列表，如："GTT,POST,PUT,DELETE,OPTIONS"。
+* Access-Control-Allow-Methods: 必须字段，表示允许以哪些http请求的方式进行通信，多个值的时候是以逗号分隔的列表，如："GET,POST,PUT,DELETE,OPTIONS"。
 
 * Access-Control-Allow-Headers: 如果http请求中有携带Access-Control-Allow-Headers字段，服务端就必须设置该字段，值是http请求中有携带的字段，多个值的时候是以逗号分隔的列表。
 
