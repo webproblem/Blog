@@ -18,6 +18,7 @@
             {};
 
   // Save the previous value of the `_` variable.
+  // 存储顶层对象上的 `_` 标识
   var previousUnderscore = root._;
 
   // Save bytes in the minified (but not gzipped) version:
@@ -69,22 +70,40 @@
   // Internal function that returns an efficient (for current engines) version
   // of the passed-in callback, to be repeatedly applied in other Underscore
   // functions.
+  /**
+   * 优化迭代器回调
+   * @param func 迭代器回调 
+   * @param context 执行上下文
+   * @param argCount 指定迭代器回调接受参数个数
+   */
   var optimizeCb = function(func, context, argCount) {
+    // 如果没有传入上下文，直接返回
     if (context === void 0) return func;
+    // 根据指定接受参数进行处理
     switch (argCount) {
       case 1: return function(value) {
+        // value: 当前迭代元素
         return func.call(context, value);
       };
       // The 2-parameter case has been omitted only because no current consumers
       // made use of it.
       case null:
       case 3: return function(value, index, collection) {
+        // value: 当前迭代元素，index: 迭代元素索引，collection: 迭代集合
         return func.call(context, value, index, collection);
       };
       case 4: return function(accumulator, value, index, collection) {
+        // accumulator: 累加器，value: 当前迭代元素，index: 迭代元素索引，collection: 迭代集合
         return func.call(context, accumulator, value, index, collection);
       };
     }
+    // 当指定迭代器回调接受参数的个数超过4个，就用 arguments 代替
+    // 为什么不直接使用这段代码而是在上面根据 argCount 处理接受的参数
+    // 1. arguments 存在性能问题
+    // 2. call 比 apply 速度更快
+    // 具体可参考：
+    // https://juejin.im/post/5959edfc5188250d83241399#heading-6
+    // https://zhuanlan.zhihu.com/p/27659836
     return function() {
       return func.apply(context, arguments);
     };
@@ -96,10 +115,16 @@
   // element in a collection, returning the desired result — either `identity`,
   // an arbitrary callback, a property matcher, or a property accessor.
   var cb = function(value, context, argCount) {
+    // 是否使用自定义的 iteratee 迭代器，外部可以自定义 iteratee 迭代器
     if (_.iteratee !== builtinIteratee) return _.iteratee(value, context);
+    // 处理不传入 iteratee 迭代器的情况，直接返回迭代集合
+    // _.map([1,2,3]); // [1,2,3]
     if (value == null) return _.identity;
+    // 优化 iteratee 迭代器是函数的情况
     if (_.isFunction(value)) return optimizeCb(value, context, argCount);
+    // 处理 iteratee 迭代器是对象的情况
     if (_.isObject(value) && !_.isArray(value)) return _.matcher(value);
+    // 其他情况的处理
     return _.property(value);
   };
 
@@ -164,9 +189,13 @@
   // should be iterated as an array or as an object.
   // Related: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
   // Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
+  // JavaScript 中所能表示的最大安全数
   var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+  // 获取对象的 length 属性值
   var getLength = shallowProperty('length');
+  // 判断传入的 collection 是否是数组或类数组对象
   var isArrayLike = function(collection) {
+    // 获取 collection 对象的 length 属性值
     var length = getLength(collection);
     return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
   };
@@ -194,7 +223,17 @@
   };
 
   // Return the results of applying the iteratee to each element.
+  /**
+   * @param obj 对象
+   * @param iteratee 迭代回调
+   * @param context 执行上下文
+   * _.map 的强大之处在于 iteratee 迭代回调的参数可以是函数，对象，字符串，甚至不传参
+   * _.map 会根据不同类型的 iteratee 参数进行不同的处理
+   * _.map([1,2,3], function(num){ return num * 3; }); // [3, 6, 9]
+   * _.map([{name: 'Kevin'}, {name: 'Daisy'}], 'name'); // ["Kevin", "Daisy"]
+   */
   _.map = _.collect = function(obj, iteratee, context) {
+    // 针对不同类型的 iteratee 进行处理
     iteratee = cb(iteratee, context);
     var keys = !isArrayLike(obj) && _.keys(obj),
         length = (keys || obj).length,
@@ -1050,8 +1089,10 @@
 
   // Retrieve the names of an object's own properties.
   // Delegates to **ECMAScript 5**'s native `Object.keys`.
+  // 获取对象上可枚举的属性，不包含原型链上的属性
   _.keys = function(obj) {
     if (!_.isObject(obj)) return [];
+    // 如果执行环境支持 Object.keys，就直接使用 Object.keys 获取可枚举属性
     if (nativeKeys) return nativeKeys(obj);
     var keys = [];
     for (var key in obj) if (_.has(obj, key)) keys.push(key);
@@ -1492,8 +1533,13 @@
 
   // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
   // previous owner. Returns a reference to the Underscore object.
+  // 如果前面存在 `_` 标识或者对象，为了不引发命名冲突，可以在后面调用 noConflict 函数
+  // 把 `_` 的所有权交还给之前的拥有者，且返回值是 underscore 对象，这样可以重新命名而不冲突
+  // var underscore = _.noConflict();
   _.noConflict = function() {
+    // 把 `_` 的所有权交还给之前的拥有者
     root._ = previousUnderscore;
+    // 返回 underscore 对象
     return this;
   };
 

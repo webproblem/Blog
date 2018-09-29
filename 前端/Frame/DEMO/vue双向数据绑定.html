@@ -5,7 +5,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>vue双向数据绑定</title>
   <script src="https://unpkg.com/vue@2.5.0/dist/vue.js"></script>
-  <script src=".../../../../assets/jquery.js"></script>
 </head>
 <body>
 	<div id="app">
@@ -67,7 +66,7 @@
 				},
 				set: function(newValue) {
 					if(newValue == value) return;
-					// value = newValue;
+					value = newValue;
           dep.notify();
 				}
 			})
