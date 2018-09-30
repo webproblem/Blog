@@ -3,6 +3,11 @@
 //     (c) 2009-2017 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
+// 阅读源码过程中借鉴了别人的解析，参考：
+// https://yoyoyohamapi.gitbooks.io/undersercore-analysis/content/
+// http://www.css88.com/doc/underscore/
+// https://github.com/mqyqingfeng/Blog
+
 (function() {
 
   // Baseline setup
@@ -124,7 +129,7 @@
     if (_.isFunction(value)) return optimizeCb(value, context, argCount);
     // 处理 iteratee 迭代器是对象的情况
     if (_.isObject(value) && !_.isArray(value)) return _.matcher(value);
-    // 其他情况的处理
+    // 其他情况的处理，数组或者基本数据类型的情况
     return _.property(value);
   };
 
@@ -170,12 +175,14 @@
     return result;
   };
 
+  // 返回获取对象属性值的函数
   var shallowProperty = function(key) {
     return function(obj) {
       return obj == null ? void 0 : obj[key];
     };
   };
 
+  // 深层次获取对象的属性值
   var deepGet = function(obj, path) {
     var length = path.length;
     for (var i = 0; i < length; i++) {
@@ -1272,6 +1279,12 @@
   };
 
   // Returns whether an object has a given set of `key:value` pairs.
+  /**
+   * 检测对象中是否包含指定属性
+   * var obj = {name: '白展堂', age: 25}; 
+   * var attrs = {name: '白展堂'}; 
+   * _.isMatch(obj, attrs); // true
+   */
   _.isMatch = function(object, attrs) {
     var keys = _.keys(attrs), length = keys.length;
     if (object == null) return !length;
@@ -1557,10 +1570,20 @@
 
   _.noop = function(){};
 
+  /**
+   * 获取对象指定的属性值
+   * var obj = {name: '白展堂', age: 25};
+   * _.property('name')(obj); // 白展堂
+   * 还能获取深层次的值
+   * var obj2 = {person: {child: {name: '白展堂'}}};
+   * _.property(['person','child', 'name'])(obj2); // 白展堂
+   */
   _.property = function(path) {
+    // 不是数组的情况，直接获取对象的属性值
     if (!_.isArray(path)) {
       return shallowProperty(path);
     }
+    // 数组的情况，深层次的获取对象的属性值
     return function(obj) {
       return deepGet(obj, path);
     };
@@ -1578,9 +1601,19 @@
 
   // Returns a predicate for checking whether an object has a given set of
   // `key:value` pairs.
+  /**
+   * 传入一个属性对象，返回一个属性检测函数，检测对象是否具有指定属性
+   * var matcher = _.matcher({name: '白展堂'});
+    var obj = {name: '白展堂', age: 25};
+    matcher(obj); // true
+   */
   _.matcher = _.matches = function(attrs) {
+    // 合并复制对象，attrs 必须是 Objdect 类型
+    // arrts 的值为空或者其他数据类型，都能保证 attrs 是 Object 类型
     attrs = _.extendOwn({}, attrs);
+    // 返回属性检测函数
     return function(obj) {
+      // 检测 obj 对象是否具有指定属性 attrs
       return _.isMatch(obj, attrs);
     };
   };

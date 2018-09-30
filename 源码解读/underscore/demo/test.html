@@ -11,6 +11,8 @@
     <input id="input">
 </body>
 <script>
+    _.map([{name:'Kevin'}, {name: 'Daisy', age: 18}], {name: 'Daisy'})
+
     var throttled = _.debounce(function(){console.log('测试')}, 3000, true);
     // window.addEventListener('resize', throttled)
     document.getElementById('input').addEventListener('keyup', throttled)
