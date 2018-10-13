@@ -141,7 +141,7 @@ function removeIndexItem(arr) {
     return temp;
 }
 removeIndexItem(array);
-```        
+```
 
 * 数组clone
 
@@ -188,4 +188,6 @@ array.filter(item => array.indexOf(item) === array.lastIndexOf(item));
 
 ## 参考
 
-* [https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array)
+* https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array
+* https://yanhaijing.com/javascript/2014/01/17/fun-with-javascript-native-array-functions/
+

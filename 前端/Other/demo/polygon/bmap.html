@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>高德地图绘制围栏</title>
+    <link rel="stylesheet" href="https://cache.amap.com/lbs/static/main1119.css"/>
+    <script src="https://webapi.amap.com/maps?v=1.4.10&key=您申请的key值&plugin=AMap.MouseTool,AMap.PolyEditor"></script>
+    <!-- <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+    <script src="https://vuejs.org/js/vue.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/iview/dist/styles/iview.css">
+    <script src="https://unpkg.com/iview/dist/iview.min.js"></script>
+</head>
+<body>
+    <div id="map-main">
+        <div id="container"></div>
+        <div class="button-group">
+            <Color-picker v-model="fillColor" @on-change="setFillColor"></Color-picker>
+            <input type="button" class="button" value="开始绘制" @click="startDrawPolygon">
+            <input type="button" class="button" value="开始编辑" @click="startEditPolygon">
+            <input type="button" class="button" value="结束编辑" @click="closeEditPolygon">
+            <input type="button" class="button" value="清除围栏" @click="removePolygon">
+        </div>
+    </div>
+    <script src="./bmap.js"></script>
+</body>
+</html>

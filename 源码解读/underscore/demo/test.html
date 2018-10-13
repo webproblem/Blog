@@ -16,5 +16,12 @@
     var throttled = _.debounce(function(){console.log('测试')}, 3000, true);
     // window.addEventListener('resize', throttled)
     document.getElementById('input').addEventListener('keyup', throttled)
+
+    var person = {
+        name: '白展堂',
+        age: 25,
+        work: '跑堂'
+    };
+    console.log(_.values(person));
 </script>
 </html>

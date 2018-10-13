@@ -5,6 +5,7 @@
 
 // 阅读源码过程中借鉴了别人的解析，参考：
 // https://yoyoyohamapi.gitbooks.io/undersercore-analysis/content/
+// https://github.com/hanzichi/underscore-analysis
 // http://www.css88.com/doc/underscore/
 // https://github.com/mqyqingfeng/Blog
 
@@ -213,16 +214,24 @@
   // The cornerstone, an `each` implementation, aka `forEach`.
   // Handles raw objects in addition to array-likes. Treats all
   // sparse array-likes as if they were dense.
+  /**
+   * @param obj 对象
+   * @param iteratee 迭代回调
+   * @param context 执行上下文
+   */
   _.each = _.forEach = function(obj, iteratee, context) {
     iteratee = optimizeCb(iteratee, context);
     var i, length;
+    // 区分数组和对象的迭代
     if (isArrayLike(obj)) {
       for (i = 0, length = obj.length; i < length; i++) {
+        // 数组迭代需要三个参数，当前迭代元素，迭代元素下标值和迭代对象
         iteratee(obj[i], i, obj);
       }
     } else {
       var keys = _.keys(obj);
       for (i = 0, length = keys.length; i < length; i++) {
+        // 对象迭代需要三个参数，当前迭代属性值，迭代属性 key 值和迭代对象
         iteratee(obj[keys[i]], keys[i], obj);
       }
     }
@@ -431,7 +440,13 @@
   };
 
   // Shuffle a collection.
+  /**
+   * 得到一个随机乱序的集合副本
+   * var arr = ['a', 'b', 'c', 'd'];
+   * _.shuffle(arr); // 一次随机的结果 => ["a", "c", "d", "b"]
+   */
   _.shuffle = function(obj) {
+    // 传入 Infinity 参数是为了一次性返回乱序的结果，如果不传，每次执行都会返回一个单一的随机项
     return _.sample(obj, Infinity);
   };
 
@@ -439,16 +454,29 @@
   // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
   // If **n** is not specified, returns a single random element.
   // The internal `guard` argument allows it to work with `map`.
+  /**
+   * 从集合中产生一个随机样本
+   * 原理是遍历对象元素，将当前元素与另一个随机元素调换位置，直到遍历结束
+   * 数组乱序讲解参考文章：
+   * https://github.com/mqyqingfeng/Blog/issues/51
+   * https://github.com/hanzichi/underscore-analysis/issues/15
+   * @param obj    需要乱序的对象
+   * @param n      返回的随机元素个数，如果值为空，会返回一个单一的随机项
+   * @param guard  暂没发现这个参数的作用
+   */
   _.sample = function(obj, n, guard) {
+    // 返回单一的随机项
     if (n == null || guard) {
       if (!isArrayLike(obj)) obj = _.values(obj);
       return obj[_.random(obj.length - 1)];
     }
     var sample = isArrayLike(obj) ? _.clone(obj) : _.values(obj);
     var length = getLength(sample);
+    // 防止 n 的值为负数，且 n 的值不能超过对象元素的数量，确保下面的 for 循环正常遍历
     n = Math.max(Math.min(n, length), 0);
     var last = length - 1;
     for (var index = 0; index < n; index++) {
+      // 获取随机调换位置元素的下标
       var rand = _.random(index, last);
       var temp = sample[index];
       sample[index] = sample[rand];
@@ -1119,9 +1147,20 @@
   };
 
   // Retrieve the values of an object's properties.
+  /** 
+   * 获取对象上所有属性的 value 值的集合
+   * var person = {
+        name: '白展堂',
+        age: 25,
+        work: '跑堂'
+    };
+    console.log(_.values(person)); // ["白展堂", 25, "跑堂"]
+  */
   _.values = function(obj) {
+    // 获取对象上所有属性 key
     var keys = _.keys(obj);
     var length = keys.length;
+    // 定义存储 value 值的集合，并分配内存
     var values = Array(length);
     for (var i = 0; i < length; i++) {
       values[i] = obj[keys[i]];
@@ -1627,6 +1666,9 @@
   };
 
   // Return a random integer between min and max (inclusive).
+  /**
+   * 返回一个区间内的随机整数
+   */
   _.random = function(min, max) {
     if (max == null) {
       max = min;

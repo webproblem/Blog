@@ -8,10 +8,10 @@ call 方法接受多个参数，第一个参数是指定的 this 指向，非严
 
 ```javascript
 var foo = {
-	color: 'blue'
+    color: 'blue'
 }
 function bar(name) {
-	console.log(name + this.color);
+    console.log(name + this.color);
 }
 // 改变 bar 函数内部的 this 指向，指向 foo 对象
 bar.call(foo, '天空的颜色'); // 天空的颜色blue
@@ -49,7 +49,7 @@ personB.say(); // 燕小六居住七侠镇衙门，工作岗位是捕快
 
 ```javascript
 Function.prototype.simCall = function(context) {
-	var result = null, args = [];
+    var result = null, args = [];
     context = context || window;
     // 获取调用 simCall 方法的函数并向 context 对象添加 fn 属性，this 的指向就是调用函数
     // bar.simCall(foo, '天空的颜色'); => foo.fn = bar
@@ -61,7 +61,7 @@ Function.prototype.simCall = function(context) {
     // 获取调用 simCall 方法时，传入的参数列表
     // args => [arguments[1], arguments[2], arguments[3], ...]
     for(var i = 1; i<arguments.length; i++) {
-		args.push('arguments['+i+']');
+        args.push('arguments['+i+']');
     }
     // eval 执行函数
     // 相当于 context.fn(arguments[1], arguments[2], arguments[3], ...);
@@ -91,7 +91,7 @@ Function.prototype.simCall = function(context) {
 ```javascript
 // 将 arguments 伪数组转换成数组
 function test() {
-	var args = Array.prototype.slice.simCall(arguments);
+    var args = Array.prototype.slice.simCall(arguments);
     console.log(args);
 }
 test('a', 'b', 'c'); // ["a", "b", "c"]
@@ -136,16 +136,16 @@ bind 方法创建的绑定函数当做构造函数时，也就是使用 new 来�
 
 ```javascript
 var objA = {
-	color: 'blue'
+    color: 'blue'
 }
 var objB = {
-	color: 'red'
+    color: 'red'
 }
 var objC = {
-	color: 'black'
+    color: 'black'
 }
 function bar(name) {
-	console.log(name + this.color);
+    console.log(name + this.color);
 }
 
 var func = bar.bind(objA, '天空的颜色').bind(objB, '苹果的颜色').bind(objC, '乌云的颜色');
