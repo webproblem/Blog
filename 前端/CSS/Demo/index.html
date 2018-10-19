@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .layout {
+            margin: 20px 0px;
+        }
+        .layout article>div {
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 已知高度固定，实现三栏布局，左右宽度各300px，中间自适应 -->
+
+    <!-- float解决方案 -->
+    <section class="layout float">
+        <style>
+            .float .left {
+                float: left;
+                width: 300px;
+                background: red;
+            } 
+            .float .right {
+                float: right;
+                width: 300px;
+                background: blue;
+            }
+            .float .center {
+                background: yellow;
+            }
+        </style>
+        <article class="left-center-right">
+            <div class="left"></div>
+            <div class="right"></div>
+            <div class="center">
+                <h1>float解决方案</h1>
+            </div>
+        </article>
+    </section>
+    <!-- 绝对定位解决方案 -->
+    <section class="layout position">
+        <style>
+            .position article>div {
+                position: absolute;
+            }
+            .position .left {
+                width: 300px;
+                left: 0px;
+                background: red;
+            }
+            .position .center {
+                left: 300px;
+                right: 300px;
+                background: yellow;
+            }
+            .position .right {
+                width: 300px;
+                right: 0px;
+                background: blue;
+            }
+        </style>
+        <article class="left-center-right">
+            <div class="left"></div>
+            <div class="center">
+                <h1>绝对定位解决方案</h1>
+            </div>
+            <div class="right"></div>
+        </article>
+    </section>
+    <!-- flexbox解决方案 -->
+    <section class="layout flexbox">
+        <style>
+            .flexbox {
+                margin-top: 130px;
+            }
+            .flexbox .left-center-right {
+                display: flex;
+            }
+            .flexbox .left {
+                width: 300px;
+                background: red;
+            }
+            .flexbox .center {
+                flex: 1;
+                background: yellow;
+            }
+            .flexbox .right {
+                width: 300px;
+                background: blue;
+            }
+        </style>
+        <article class="left-center-right">
+            <div class="left"></div>
+            <div class="center">
+                <h1>flexbox解决方案</h1>
+            </div>
+            <div class="right"></div>
+        </article>
+    </section>
+    <!-- table解决方案 -->
+    <section class="layout table">
+        <style>
+            .table .left-center-right {
+                width: 100%;
+                height: 100px;
+                display: table;
+            }
+            .table article>div {
+                display: table-cell;
+            }
+            .table .left {
+                width: 300px;
+                background: red;
+            }
+            .table .center {
+                background: yellow;
+            }
+            .table .right {
+                width: 300px;
+                background: blue;
+            }
+        </style>
+        <article class="left-center-right">
+            <div class="left"></div>
+            <div class="center">
+                <h1>table解决方案</h1>
+            </div>
+            <div class="right"></div>
+        </article>
+    </section>
+</body>
+</html>
