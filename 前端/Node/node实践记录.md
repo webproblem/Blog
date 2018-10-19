@@ -8,7 +8,7 @@
 
 ## Express 自动更新
 
-通过 Express 应用生成器初始化的 node 项目，执行命令行 ``` npm start  ``` 就可以允许，但是存在的缺点就是每次修改了 node 项目的代码后必须重新启动项目，不会自动更新或者热更新。
+通过 Express 应用生成器初始化的 node 项目，执行命令行 ``` npm start  ``` 就可以运行，但是存在的缺点就是每次修改了 node 项目的代码后必须重新启动项目，不会自动更新或者热更新。
 
 > 解决方案
 
@@ -24,7 +24,7 @@
     * 在 package.json 文件中添加一条执行命令
         ```
         "dev":"node-dev ./bin/www"
-        ```    
+        ```
     * 执行 ```npm run dev``` 命令启动服务   
     
     参考： [https://blog.csdn.net/c_c123/article/details/74922504](https://blog.csdn.net/c_c123/article/details/74922504)
@@ -94,4 +94,17 @@
 
 > token 验证机制
 
-用户第一次登录的时候，登录成功之后，服务端会携带一个 token 值返回给用户端，用户端获取到 token 值并保留到 cookie 或者 localStorage 中。
+token 验证机制的流程大致是这样的：
+
+* 首次登录，用户输入用户名和密码进行登录请求，后端接受到请求后验证用户名和密码，验证通过后通知前端成功登录并会生成一个 token 字段返回给前端。
+* 前端拿到后端返回的 token 字段值并保存在本地，后面每次跳转页面发送请求时都要携带 token 值。
+* 后端验证前端携带的 token 值和生成的 token 值是否一致，并检测 token 值是否过期。
+* 前端根据验证结果来判断重定向登录页还是获取页面数据。
+
+![](./assets/token_auth.png)
+
+参考：
+
+https://segmentfault.com/a/1190000013010835
+
+https://juejin.im/post/5b7ea1366fb9a01a0b319612
