@@ -1,6 +1,6 @@
 ## 面试知识点详解 - JavaScript 部分
 
-### [1,2,3].map(parseInt); 值是多少？
+### 1. [1,2,3].map(parseInt); 值是多少？
 
 > ### 解答
 
@@ -45,7 +45,7 @@
 
 -----------------------------------------------------------------------
 
-### var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组乱序
+### 2. var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组乱序
 
 > ### 解答
 
@@ -147,7 +147,7 @@ function shuffle(arr) {
 * https://github.com/hanzichi/underscore-analysis/issues/15
 * https://blog.oldj.net/2017/01/23/shuffle-an-array-in-javascript/
 
-### var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组倒序(非 reverse)
+### 3. var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组倒序(非 reverse)
 
 > ### 解答
 
