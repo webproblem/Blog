@@ -85,5 +85,51 @@ function getOneStyle(element, cssParam) {
 }
 ```
 
+### 倒计时
+
+#### 验证码倒计时
+
+```javascript
+function limitTime() {
+    var codeText = '';
+    var defaultTime = 60;
+    var time = setInterval(function(){
+        if(defaultTime <= 0){
+            clearInterval(time);
+            // 一些操作...
+            return;
+        }
+        codeText = (defaultTime--) + "s";
+    }, 1000)
+}
+```
+
+#### 时分秒倒计时
+
+```html
+<label>倒计时:<span id="time"></span></label>
+```
+
+```javascript
+const timeWrap = document.getElementById("time");
+let curDate = new Date().getTime();
+function countdown(){
+	let getDate = new Date().getTime();
+	const LIMIT_TIME = 2 * 3600 * 1000;
+	let limitDate = (LIMIT_TIME + curDate) - getDate;
+	const hours = parseInt(limitDate / 1000 / 60 / 60 % 24 , 10);
+	const minutes = parseInt(limitDate / 1000 / 60 % 60, 10);
+	const seconds = parseInt(limitDate / 1000 % 60, 10);
+	timeWrap.innerHTML = hours + ":" + minutes + ":" + seconds;
+	let times = setTimeout(function(){
+		if(limitDate < 1){
+			clearTimeout(times);
+			return;
+		}
+		countdown();
+	},1000)
+}
+```
+
 
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BFC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- BFC 外边距重叠 -->
+    <section class="BFC-container-1">
+        <p class="col-1">Sibling 1</p>
+        <p class="col-2">Sibling 2</p>
+        <!-- <div class="newBFC">
+            <p>Sibling 3</p>
+        </div> -->
+    </section>
+    <style>
+        .BFC-container-1 {
+            background: red;
+            overflow: hidden;
+        }
+        .BFC-container-1 p {
+            margin: 10px 0px;
+            background: lightgreen;
+            padding: 10px 0px;
+        }
+        .BFC-container-1 .col-2 {
+            margin-top: 30px;
+        }
+    </style>
+</body>
+</html>

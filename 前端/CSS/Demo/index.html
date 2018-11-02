@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>多栏布局</title>
     <style>
         * {
             margin: 0;
@@ -142,21 +142,86 @@
 
     <!-- 圣杯布局 -->
     <header>header</header>
-    <section class="wrapper">
-        <section class="col m-main">main</section>
-        <aside class="col m-left">left</aside>
-        <aside class="col m-right">right</aside>
+    <section class="holy-grail">
+        <section class="col main">main</section>
+        <aside class="col left">left</aside>
+        <aside class="col right">right</aside>
     </section>
     <footer>footer</footer>
         
     <style>
-        /* 以下为简码，仅保留关键部分 */
-        header,footer {height: 50px;background-color: #999999;}
-        .wrapper {padding: 0 100px 0 100px; overflow:hidden;}
-        .col {position: relative; float: left;}
-        .m-main {width: 100%;height: 200px;background: yellow;}
-        .m-left {width: 100px; height: 200px; margin-left: -100%;left: -100px;background: red;}
-        .m-right {width: 100px; height: 200px; margin-left: -100px; right: -100px;background: blue;}
+        header, footer {
+            height: 50px;
+            background: #999999;
+        }
+        .holy-grail {
+            overflow: hidden;
+            padding: 0px 300px;
+        }
+        .holy-grail .col {
+            float: left;
+            height: 100px;
+            position: relative;
+        }
+        .holy-grail .main {
+            width: 100%;
+            background: yellow;
+        }
+        .holy-grail .left {
+            width: 300px;
+            background: red;
+            margin-left: -100%;
+            left: -300px;
+        }
+        .holy-grail .right {
+            width: 300px;
+            background: blue;
+            margin-left: -300px;
+            right: -300px;
+        }
+    </style>
+    <!-- 双飞翼布局 -->
+    <header>header</header>
+    <section class="wrapper">
+        <section class="col main">
+            <section class="main-wrap">main</section>
+        </section>
+        <aside class="col left">left</aside>
+        <aside class="col right">right</aside>
+    </section>
+    <footer>footer</footer>
+    <style>
+        header {
+            margin-top: 30px
+        }
+        header, footer {
+            height: 50px;
+            background: #999999;
+        }
+        .wrapper {
+            overflow: hidden;
+        }
+        .wrapper .col {
+            float: left;
+            height: 100px;
+        }
+        .wrapper .main {
+            width: 100%;
+            background: yellow;
+        }
+        .wrapper .main-wrap {
+            margin: 0px 300px;
+        }
+        .wrapper .left {
+            width: 300px;
+            background: red;
+            margin-left: -100%;
+        }
+        .wrapper .right {
+            width: 300px;
+            background: blue;
+            margin-left: -300px;
+        }
     </style>
 </body>
 </html>

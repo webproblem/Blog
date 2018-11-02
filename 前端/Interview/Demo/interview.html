@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function eq(a, b) {
+            return JSON.stringify(a) === JSON.stringify(b);
+        }
+        var a = {name: '白展堂', reg: /test1/i};
+        var b = {name: '白展堂', reg: /test2/i};
+        eq(a, b);
+    </script>
+</body>
+</html>

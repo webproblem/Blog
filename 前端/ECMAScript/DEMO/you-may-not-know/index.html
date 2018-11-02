@@ -7,12 +7,38 @@
     <title>可能不知道的知识点</title>
 </head>
 <body>
+    <a href="https://www.baidu.com">跳转百度</a>
+    <input type="text">
     <script>
         function test() {
             console.debug('调试啊')
             return 100;
         }
         test();
+    </script>
+
+    <script>
+        document.addEventListener('visibilitychange', function() {
+            console.log(document.hidden);
+            if(document.hidden) {
+                document.title = '页面隐藏起来了';
+            }else {
+                document.title = '页面显示出来了';
+                setTimeout(function() {
+                    document.title = '可能不知道的知识点';
+                }, 2000)
+            }
+        })
+    </script>
+
+    <script>
+        window.onbeforeunload = function (e) {
+            // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+            return '关闭提示';
+        };
+        window.onunload = function(e) {
+            alert("unload event detected!");
+        }
     </script>
 </body>
 </html>

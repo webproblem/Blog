@@ -43,7 +43,7 @@
 
 * [https://segmentfault.com/a/1190000000411840](https://segmentfault.com/a/1190000000411840)  
 
------------------------------------------------------------------------
+------------------------------------------------------------------
 
 ### 2. var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组乱序
 
@@ -147,6 +147,8 @@ function shuffle(arr) {
 * https://github.com/hanzichi/underscore-analysis/issues/15
 * https://blog.oldj.net/2017/01/23/shuffle-an-array-in-javascript/
 
+--------------------------------------------------------------------------------------------------
+
 ### 3. var arr = ['a', 'b', 'c', 'd', 'c']; 实现数组倒序(非 reverse)
 
 > ### 解答
@@ -191,9 +193,200 @@ function reverse(arr) {
     return arr;
 }
 ```
------------------------------------------------------------------------
+--------------------------------------------------------------
 
+### 4. 如何判断两个对象相等
 
+> ### 解答
 
+首先要清楚 JavaScript 中的相等分为宽松相等（==）和严格相等（===）。宽松相等在比较值的时候会先进行类型的隐式转换，严格相等下如果比较值的类型不一致，那么就判定比较值不全等。如果比较值是引用类型，宽松相等和严格相等就不能判断出值是否相等了（引用类型浅拷贝比较值除外，也就是比较值指向的是同一引用地址），原因是对于任意两个不同的非原始对象，即便他们有相同的结构，都会计算得到 false 。
 
+```javascript
+var num = 1;
+var str = '1';
+console.log(num == str); // true
+console.log(num === str); // false
+
+var obj1 = {name: '白展堂'};
+var obj2 = {name: '白展堂'};
+var obj3 = obj1;
+console.log(obj1 == obj2); // false
+console.log(obj1 === obj2); // false
+console.log(obj1 == obj3); // true
+console.log(obj1 === obj3); // true
+
+var arr1 = [1];
+var arr2 = [1];
+console.log(arr1 == arr2); // false
+console.log(arr1 === arr2); // false
+```
+
+#### JSON.stringify
+
+如何判断对象是否相等？
+
+一种解决方案就是使用 JSON.stringify 序列化成字符串再做比较。
+
+```javascript
+var obj1 = {name: '白展堂', age: 25};
+var obj2 = {name: '白展堂', age: 25};
+JSON.stringify(obj1) === JSON.stringify(obj2); // true
+
+var arr1 = ['a', 'b', 'c', 'd'];
+var arr2 = ['a', 'b', 'c', 'd'];
+JSON.stringify(arr1) === JSON.stringify(arr2); // true
+```
+
+这种方案看似可以判断出对象是否相等，但是会不会存在问题呢？看过 underscore 源码的都知道，isEqual 函数的实现有多复杂，很多种情况显然不是通过 JSON.stringify 序列化就能解决的。
+
+先来分析下 JSON.stringify 方案存在的问题，假设比较对象中的属性值存在 RegExp 对象，判定结果是怎样的呢？
+
+```javascript
+function eq(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+var obj1 = {name: '白展堂', reg: /test1/i};
+var obj2 = {name: '白展堂', reg: /test2/i};
+eq(obj1, obj2); // true
+```
+
+结果为 true，也就是说 obj1 和 obj2 序列化的字符串是一致的。
+
+```javascript
+var obj1 = {name: '白展堂', reg: /test1/i};
+var obj2 = {name: '白展堂', reg: /test2/i};
+JSON.stringify(obj1); // "{"name":"白展堂","reg":{}}"
+JSON.stringify(obj2); // "{"name":"白展堂","reg":{}}"
+```
+
+可以看到，JSON.stringify 将 RegExp 对象序列化成了 '{}'，也就是说 JSON.stringify 序列化对于某些情况会存在问题，比如 undefined 和 Function 函数在序列化过程中会被忽略。
+
+```javascript
+function test() {}
+JSON.stringify(undefined) === JSON.stringify(test); // true
+```
+
+#### 实现
+
+那么如何完美的判断对象或值相等，可以读下 underscore 中的 isEqual 函数源码，这里说下大致思路。
+
+**区分 0 与 -0 之间的差异**
+
+0 与 -0 看似相等吗，其实不然。
+
+```javascript
+1 / 0 // Infinity
+1 / -0 // -Infinity
+1 / 0 === 1 / -0 // false
+```
+
+区分方式：
+
+```javascript
+function eq(a, b) {
+    if(a === b) {
+        return a !== 0 || 1 / a === 1 / b; 
+    }
+    return false;
+}
+eq(0, 0); // true
+eq(0, -0); // false
+```
+
+**判断值是否为 NaN**
+
+判断某个值是否为 NaN 时不能直接比较这个值是否等于 NaN，因为 NaN 不等于自身，可以使用原生函数 Number.isNaN() 或 isNaN()。
+
+```javascript
+var a = NaN;
+a === NaN; // false
+isNaN(a); // true
+```
+
+那么自己如何实现判断 NaN 值的方法？利用 NaN 不等于自身的原理。
+
+```javascript
+function eq(a, b) {
+    if(a !== a) return b !== b; 
+}
+eq(NaN, NaN); //true
+eq(NaN, 'test'); // false
+```
+
+**隐式类型转换**
+
+对于 RegExp，String，Number，Boolean 等值的比较先进行隐式类型转换。
+
+**递归遍历**
+
+对于数组和对象的比较值，采用递归遍历比较，需要注意的是可能存在循环引用的问题。
+
+#### 参考
+
+* https://blog.csdn.net/qq_30100043/article/details/53419801
+* https://github.com/mqyqingfeng/Blog/issues/41
+* https://github.com/hanzichi/underscore-analysis/issues/5
+* https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Equality_comparisons_and_sameness
+* https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+
+------------------------------------------------------------------------------------------------
+
+### 5. 如何判断一个变量是数组还是对象
+
+> ### 解答
+
+这里主要考察的是对类型判断的掌握。
+
+#### typeof
+
+typeof 操作符会返回字符串形式的数据类型。JavaScript 有 6 中基本数据类型（Undefined, Null, String, Number, Boolean, Symbol）和 1 种引用类型（Object），使用 typeof 操作符对这些数据类型操作时，返回的结果分别是：undefined, object, string, number, boolean, symbol, object。Null 类型的变量通过 typeof 操作符得到的结果是 object，也就是说 typeof 操作符判断类型并不准确，同样的如： Date, RegExp, Array 等类型。
+
+```javascript
+var a = null;
+typeof a; // object
+
+var arr = [];
+typeof arr; // object
+
+var date = new Date();
+typeof date; // object
+```
+
+#### Object.prototype.toString
+
+另一种完美的解决方案是 Object.prototype.toString！通过 toString 来获取数据的类型，需要以 call 或者 apply 的方式来调用对数据进行检测，返回的结果是由 [object, class] 组成的。关于该方法的具体描述，参考：<https://es5.github.io/#x15.2.4.2> 。
+
+```javascript
+var toString = Object.prototype.toString;
+toString.call(null); // [object Null]
+toString.call([]); // [object Array] 
+toString.call(new Date()); // [object Date]
+```
+
+那么如何来封装一个判断变量类型的函数
+
+```javascript
+/**
+ * @param obj   需要判断类型的变量
+ * @param type  判断的类型
+*/
+function type(obj, type) {
+    var classType = {};
+    var result = null;
+    ['Function', 'Array', 'Date', 'RegExp', 'Object', 'Error'].map(function(item) {
+        classType['[object '+item+']'] = item.toLowerCase();
+    })
+    result = typeof obj === 'function' || typeof obj === 'object' ? classType[Object.prototype.toString.call(obj)] : typeof obj;
+    return result === type;
+}
+
+type([], 'array'); // true
+type([], 'object'); // false
+```
+
+#### 参考
+
+* https://github.com/mqyqingfeng/Blog/issues/28
+
+--------------------------------------------------------------------------------
 
