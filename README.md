@@ -18,6 +18,10 @@
 
 技术输出存放在 [issue](https://github.com/webproblem/Blog/issues) 中。 
 
+* [从underscore源码看如何判断两个对象相等](https://github.com/webproblem/Blog/issues/10)
+
+* [从underscore源码看数组乱序](https://github.com/webproblem/Blog/issues/7)
+
 * [从一道面试题认识函数柯里化](https://github.com/webproblem/Blog/issues/4)
 
 * [移动端手势库AlloyFinger源码分析](https://github.com/webproblem/Blog/issues/3)
