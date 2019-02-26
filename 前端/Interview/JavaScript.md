@@ -373,7 +373,7 @@ toString.call(new Date()); // [object Date]
 function type(obj, type) {
     var classType = {};
     var result = null;
-    ['Function', 'Array', 'Date', 'RegExp', 'Object', 'Error'].map(function(item) {
+    ['Function', 'Array', 'Date', 'RegExp', 'Null', 'Object', 'Error'].map(function(item) {
         classType['[object '+item+']'] = item.toLowerCase();
     })
     result = typeof obj === 'function' || typeof obj === 'object' ? classType[Object.prototype.toString.call(obj)] : typeof obj;
