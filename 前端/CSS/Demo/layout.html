@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 水平居中 -->
+    <p>水平居中</p>
+    <div class="text-align-layout hor-parent">
+        <div class="hor-child">DEMO1</div>
+        <div class="hor-child">DEMO2</div>
+    </div>
+    <style>
+        .text-align-layout.hor-parent {
+            text-align: center;
+            width: 200px;
+            border: 1px solid red;
+        }
+        .text-align-layout .hor-child {
+            display: inline-block;
+            background-color: blue;
+        }
+    </style>
+    <div class="margin-layout hor-parent">
+        <div class="hor-child">DEMO</div>
+    </div>
+    <style>
+        .margin-layout.hor-parent {
+            width: 200px;
+            border: 1px solid red;
+        }
+        .margin-layout .hor-child {
+            margin: 0 auto;
+            width: 100px;
+            background-color: blue;
+        }
+    </style>
+    <div class="absolute-layout hor-parent">
+        <div class="hor-child">DEMO</div>
+    </div>
+    <style>
+        .absolute-layout {
+            width: 200px;
+            height: 100px;
+            position: relative;
+            border: 1px solid red;
+        }
+        .absolute-layout .hor-child {
+            width: 100px;
+            background-color: red;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+        }
+    </style>
+    <div class="flex-layout hor-parent">
+        <div class="hor-child">DEMO</div>
+    </div>
+    <style>
+        .flex-layout {
+            width: 200px;
+            border: 1px solid red;
+            display: flex;
+            justify-content: center;
+        }
+        .flex-layout .hor-child {
+            width: 100px;
+            background-color: red;
+        }
+    </style>
+    <!-- 垂直居中 -->
+    <p>垂直居中</p>
+    <div class="line-height ver-parent">
+        <div class="ver-child">DEMO</div>
+    </div>
+    <style>
+        .ver-parent {
+            width: 200px;
+            height: 60px;
+            border: 1px solid blue;
+        }
+        .line-height {
+            line-height: 60px;
+        }
+    </style>
+    <div class="absolute ver-parent">
+        <div class="ver-child">DEMO</div>
+    </div>
+    <style>
+        .absolute.ver-parent {
+            position: relative;
+        }
+        .absolute .ver-child {
+            background-color: red;
+            width: 100px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%)
+        }
+    </style>
+    <div class="flex ver-parent">
+        <div class="ver-child">DEMO</div>
+    </div>
+    <style>
+     .flex.ver-parent {
+         display: flex;
+         align-items: center;
+     }
+     .flex .ver-child {
+         background-color: red;
+         width: 100px;
+     }
+    </style>
+    <!-- 水平垂直居中 -->
+    <div class="c1 hor-ver-parent">
+        <div class="hor-ver-child">DEMO</div>
+    </div>
+    <style>
+        .hor-ver-parent {
+            width: 200px;
+            height: 60px;
+            border: 1px solid blue;
+        }
+        .hor-ver-child {
+            background-color: red;
+            width: 100px;
+            height: 30px;
+        }
+        .c1.hor-ver-parent {
+            position: relative;
+        }
+        .c1 .hor-ver-child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <div class="c2 hor-ver-parent">
+        <div class="hor-ver-child">DEMO</div>
+    </div>
+    <style>
+        .c2.hor-ver-parent {
+            position: relative;
+        }
+        .c2 .hor-ver-child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
+    <div class="c3 hor-ver-parent">
+        <div class="hor-ver-child">DEMO</div>
+    </div>
+    <style>
+        .c3.hor-ver-parent {
+            display: flex;
+        }
+        .c3 .hor-ver-child {
+            margin: auto;
+        }
+    </style>
+</body>
+</html>

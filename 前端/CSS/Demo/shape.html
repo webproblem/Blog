@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>css画几何形状</title>
+</head>
+<body>
+    <!-- 圆形 -->
+    <div id="circle"></div>
+    <!-- 三角形 -->
+    <div id="triangle"></div>
+    <div id="triangle2"></div>
+    <style>
+        #circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background-color: red; 
+        }
+        #triangle {
+            width: 0;
+            height: 0;
+            border-width: 100px;
+            border-style: solid;
+            border-color: transparent transparent red transparent;
+        }
+        #triangle2 {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid red;
+        }
+    </style>
+</body>
+</html>
